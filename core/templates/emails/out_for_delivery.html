@@ -1,0 +1,17 @@
+{% extends "emails/base_email.html" %}
+{% block content %}
+<h2 style="color:#FFA500;">Your Order is Out for Delivery 🚚</h2>
+<p>Hello {{ order.user.first_name }},</p>
+<p>Your order <strong>#{{ order.id }}</strong> is now <strong>on the way</strong>!</p>
+<p>
+You can track the delivery live using the link below:
+</p>
+<p style="margin-top:15px;">
+    <a href="{{ tracking_url }}"
+       style="background:#ffb300;padding:10px 20px;color:white;
+              border-radius:6px;text-decoration:none;font-weight:bold;">
+       Track Your Order
+    </a>
+</p>
+<p>Thank you for shopping with us ❤️</p>
+{% endblock %}

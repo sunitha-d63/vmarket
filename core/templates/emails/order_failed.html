@@ -1,0 +1,16 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<h2 class="highlight">Delivery Failed ❌</h2>
+
+<p>Hi {{ order.full_name }},</p>
+
+<p>Your order <strong>#{{ order.id }}</strong> could not be delivered.</p>
+
+<p>Please contact support if you need help.</p>
+{% endblock %}
+<a href="{{ domain }}/track-order/?order_id={{ order.id }}"
+   style="padding:10px 20px; background:#f97316; color:white; 
+          border-radius:8px; text-decoration:none; font-weight:bold;">
+    Track Order
+</a>

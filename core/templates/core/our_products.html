@@ -1,0 +1,317 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load wishlist_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/our_product.css' %}" />
+{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center text-center g-4 category-row">
+    <div class="col-6 col-md-3">
+      <a href="?category=all" class="category-box">
+        <img src="{% static 'images/veg1.png' %}" class="category-img">
+        <h6 class="category-title mt-3">ALL PRODUCT</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="?category=fruits" class="category-box">
+        <img src="{% static 'images/fruit.avif' %}" class="category-img">
+        <h6 class="category-title mt-3">FRESH FRUITS</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="?category=Nuts" class="category-box">
+        <img src="{% static 'images/image1.jpg' %}" class="category-img">
+        <h6 class="category-title mt-3">Nuts</h6>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="?category=Drinks" class="category-box">
+        <img src="{% static 'images/drink2.png' %}" class="category-img">
+        <h6 class="category-title mt-3">RECIPES</h6>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="container my-5">
+  <div class="row g-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="offer-card left-anim text-center">
+        <div class="offer-headers text-white fw-bold py-4 rounded-top">
+          DEALS <br> OF THE WEEK
+        </div>
+        <div class="offer-body py-3">
+          <a href="{% url 'offers_page' %}" class="text-warning text-decoration-none fw-semibold">
+            View offers &gt;
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="offer-card left-anim text-center">
+        <div class="offer-headers text-white fw-bold py-4 rounded-top">
+          BIG PACK <br> BIGGER DISCOUNTS
+        </div>
+        <div class="offer-body py-3">
+          <a href="{% url 'offers_page' %}" class="text-warning text-decoration-none fw-semibold">
+            View offers &gt;
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="offer-card right-anim text-center">
+        <div class="offer-headers text-white fw-bold py-4 rounded-top">
+          COMBOS <br> YOU CAN’T MISS
+        </div>
+        <div class="offer-body py-3">
+          <a href="{% url 'offers_page' %}" class="text-warning text-decoration-none fw-semibold">
+            View offers &gt;
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="offer-card right-anim text-center">
+        <div class="offer-headers text-white fw-bold py-4 rounded-top">
+          THE <br> ₹30 CORNER
+        </div>
+        <div class="offer-body py-3">
+          <a href="{% url 'offers_page' %}" class="text-warning text-decoration-none fw-semibold">
+            View offers &gt;
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row">
+   <div class="col-lg-3 col-md-4">
+  <div class="filter-box shadow-sm rounded-4 p-4" style="border-left:4px solid #f4a020;">
+
+    <h5 class="fw-bold mb-4 d-flex align-items-center">
+      <i class="bi bi-funnel me-2"></i> Filters
+    </h5>
+
+    <form method="get">
+      <input type="hidden" name="category" value="{{ selected_category }}">
+
+      <label class="form-label fw-semibold text-secondary">Search</label>
+      <div class="input-group mb-4">
+        <span class="input-group-text bg-white border-0">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" name="q"
+               class="form-control shadow-sm border-0 bg-white rounded-3"
+               placeholder="Search..."
+               value="{{ keyword }}">
+      </div>
+
+<label class="form-label fw-semibold text-secondary">Price Range</label>
+
+<div class="row g-2 mb-3">
+
+  <div class="col-12">
+    <div class="input-group shadow-sm rounded-3 bg-white">
+      <span class="input-group-text bg-white border-0">Min ₹</span>
+      <input type="number" name="min_price" id="min_price"
+             class="form-control border-0 bg-white"
+             placeholder="e.g. 100"
+             value="{{ min_price }}">
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="input-group shadow-sm rounded-3 bg-white">
+      <span class="input-group-text bg-white border-0">Max ₹</span>
+      <input type="number" name="max_price" id="max_price"
+             class="form-control border-0 bg-white"
+             placeholder="e.g. 5000"
+             value="{{ max_price }}">
+    </div>
+  </div>
+
+</div>
+
+<p class="text-muted small mb-3">
+  Selected: ₹{{ min_price|default:"0" }} – ₹{{ max_price|default:"Unlimited" }}
+</p>
+
+      <label class="form-label fw-semibold text-secondary">Sort By</label>
+      <select name="sort"
+              class="form-select shadow-sm border-0 bg-white rounded-3 mb-4">
+        <option value="">Default</option>
+        <option value="price_asc">Price: Low → High</option>
+        <option value="price_desc">Price: High → Low</option>
+      </select>
+
+      <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-dark fw-semibold w-50 py-2 rounded-3">
+          Apply
+        </button>
+        <a href="{% url 'our_products' %}"
+           class="btn btn-outline-secondary fw-semibold w-50 py-2 rounded-3">
+          Reset
+        </a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+    <div class="col-lg-9 col-md-8">
+
+      {% if products %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          {% for product in products %}
+
+          <div class="col animate-card">
+            <div class="pro-card position-relative">
+
+              <form action="{% url 'toggle_wishlist' product.id %}"
+                    method="post"
+                    class="wishlist-btn">
+                {% csrf_token %}
+<button class="btn btn-light rounded-circle shadow-sm">
+
+{% if user.is_authenticated %}
+    {% if product.in_wishlist %}
+        <span class="heart-icon heart-red">❤️</span>
+    {% else %}
+        <span class="heart-icon heart-empty">🤍</span>
+    {% endif %}
+
+{% else %}
+    {% if product.id in guest_wishlist_ids %}
+        <span class="heart-icon heart-red">❤️</span>
+    {% else %}
+        <span class="heart-icon heart-empty">🤍</span>
+    {% endif %}
+{% endif %}
+
+</button>
+
+              </form>
+
+              <a href="{{ product.get_absolute_url }}">
+                <img src="{{ product.image.url }}"
+                     class="pro-img"
+                     alt="">
+              </a>
+
+              <div class="p-3 text-center">
+                <h5 class="fw-light text-uppercase fw-bold fst-italic"
+                    style="color: #d3e83aff;">
+                  {{ product.title }}
+                </h5>
+
+                {% if product.is_offer_active %}
+                  <p class="text-white fw-bold">
+                    <span class="text-decoration-line-through text-light-50 me-2">
+                      ₹{{ product.base_price|floatformat:2 }}
+                    </span>
+                    <span class="text-warning">
+                      ₹{{ product.discounted_price|floatformat:2 }}
+                    </span>
+                    <span class="small text-light">/ {{ product.unit }}</span>
+                  </p>
+                {% else %}
+                  <p class="text-white fw-bold">
+                    ₹{{ product.base_price|floatformat:2 }}
+                    <span class="small text-light">/ {{ product.unit }}</span>
+                  </p>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="text-center py-5">
+          <h4 class="fw-bold text-danger">No products found</h4>
+          <p class="text-muted">Try adjusting your filters or click Reset.</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("select").forEach(function (selectElement) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "custom-select-wrapper";
+
+      const display = document.createElement("div");
+      display.className = "custom-select-display";
+      display.innerText =
+        selectElement.options[selectElement.selectedIndex].text;
+
+      const optionBox = document.createElement("div");
+      optionBox.className = "custom-select-options";
+
+      Array.from(selectElement.options).forEach((option) => {
+        const opt = document.createElement("div");
+        opt.className = "custom-select-option";
+        opt.innerText = option.text;
+        opt.dataset.value = option.value;
+
+        if (option.selected) opt.classList.add("selected");
+
+        opt.onclick = () => {
+          selectElement.value = opt.dataset.value;
+          display.innerText = opt.innerText;
+          optionBox.style.display = "none";
+          optionBox
+            .querySelectorAll("div")
+            .forEach((o) => o.classList.remove("selected"));
+          opt.classList.add("selected");
+        };
+
+        optionBox.appendChild(opt);
+      });
+
+      display.onclick = () => {
+        optionBox.style.display =
+          optionBox.style.display === "block" ? "none" : "block";
+      };
+
+      selectElement.style.display = "none";
+
+      selectElement.parentNode.insertBefore(wrapper, selectElement);
+      wrapper.appendChild(selectElement);
+      wrapper.appendChild(display);
+      wrapper.appendChild(optionBox);
+    });
+  });
+
+</script>
+<script>
+document.addEventListener("input", function () {
+    let min = document.getElementById("min_price");
+    let max = document.getElementById("max_price");
+
+    if (min.value !== "" && max.value !== "") {
+        if (parseInt(min.value) > parseInt(max.value)) {
+            max.setCustomValidity("Maximum price cannot be less than minimum price.");
+        } else {
+            max.setCustomValidity("");
+        }
+    }
+});
+
+
+</script>
+
+{% endblock %}

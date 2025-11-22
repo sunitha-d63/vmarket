@@ -1,0 +1,105 @@
+<footer class="bg-dark text-light pt-5 pb-4 mt-5 w-100">
+  <div class="container">
+    <div class="row gy-4 text-center text-md-start">
+
+      <!-- Brand Section -->
+      <div class="col-12 col-md-4">
+        <h4 class="fw-bold mb-3 footerlink fs-4">🛒 VetriMart</h4>
+        <p class="fs-6 lh-lg">
+          Your trusted online store for high-quality products at unbeatable prices.  
+          Enjoy fast delivery and customer-friendly service — always with a smile 😊.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-12 col-md-4">
+        <h4 class="fw-bold mb-3 footerlink fs-4">Quick Links</h4>
+        <ul class="list-unstyled m-0 p-0">
+          <li class="mb-2">
+            <a href="{% url 'home' %}" class="footer-link text-decoration-none text-light">🏠 Home</a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'our_products' %}" class="footer-link text-decoration-none text-light">🛍️ Our Products</a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'contact_page' %}" class="footer-link text-decoration-none text-light">📞 Contact</a>
+          </li>
+
+          {% if user.is_authenticated %}
+          <li class="mb-2">
+            <a href="{% url 'logout' %}" class="footer-link text-decoration-none text-light">🚪 Logout</a>
+          </li>
+          {% else %}
+          <li class="mb-2">
+            <a href="{% url 'login' %}" class="footer-link text-decoration-none text-light">🔑 Login</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Contact Details -->
+      <div class="col-12 col-md-4">
+     <h4 class="fw-bold mb-3 footerlink fs-4">Contact Us</h4>
+
+<!-- Address -->
+<p class="fs-6 mb-1">
+  📍 
+  <a href="https://maps.google.com/?q=123+Vetri+Street,+Chennai,+India" 
+     class="text-light text-decoration-none" 
+     target="_blank">
+    Shanthi Complex, Surandai, Tenkasi
+  </a>
+</p>
+
+<!-- Email -->
+<p class="fs-6 mb-1">
+  📧 
+  <a href="mailto:support@vetrimart.com" 
+     class="text-light text-decoration-none">
+    support@vetrimart.com
+  </a>
+</p>
+
+<!-- Phone -->
+<p class="fs-6 mb-3">
+  📞 
+  <a href="tel:+919876543210" 
+     class="text-light text-decoration-none">
+    +91 7397654827
+  </a>
+</p>
+
+
+        <div class="d-flex justify-content-center justify-content-md-start gap-3">
+  <a href="https://www.facebook.com/yourpage" 
+     target="_blank" 
+     class="text-light fs-4">
+      <i class="bi bi-facebook"></i>
+  </a>
+
+  <a href="https://www.instagram.com/yourpage" 
+     target="_blank" 
+     class="text-light fs-4">
+      <i class="bi bi-instagram"></i>
+  </a>
+
+  <a href="https://twitter.com/yourpage" 
+     target="_blank" 
+     class="text-light fs-4">
+      <i class="bi bi-twitter"></i>
+  </a>
+
+  <a href="https://wa.me/919876543210" 
+     target="_blank" 
+     class="text-light fs-4">
+      <i class="bi bi-whatsapp"></i>
+  </a>
+</div>
+      </div>
+    </div>
+    <hr class="border-light mt-4">
+  <div class="text-center pt-2 fs-6">
+      © {{ now|date:"Y" }} <strong>VetriMart</strong>. All Rights Reserved.
+    </div>
+  </div>
+</footer>

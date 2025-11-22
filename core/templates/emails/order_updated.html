@@ -1,0 +1,9 @@
+<h3>Your Order Has Been Updated</h3>
+<p>Order ID: #{{ order.id }}</p>
+<p>Your new delivery details have been saved.</p>
+<p>Expected Delivery: {{ order.expected_delivery_time|date:"d M Y h:i A" }}</p>
+<a href="{{ domain }}/track-order/?order_id={{ order.id }}"
+   style="padding:10px 20px; background:#f97316; color:white; 
+          border-radius:8px; text-decoration:none; font-weight:bold;">
+    Track Order
+</a>

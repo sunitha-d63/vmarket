@@ -1,0 +1,135 @@
+.features-section .row > div {
+    display: flex;     
+}
+.featurecontainer{
+  color: white !important;
+}
+.blue-bg {
+  background: linear-gradient(#b9edff, #e7faff);
+  padding: 20px;
+    border-radius: 80px 20px 70px 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;     
+    transform: translateY(0);
+    
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.yellow-bg {
+  background: linear-gradient(#ffe074, #fff2c9);
+  padding: 20px;
+    border-radius: 80px 20px 70px 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;     
+    transform: translateY(0);
+    
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+/* .feature-card {
+    background: #9ddac9;
+    padding: 20px;
+    border-radius: 80px 20px 70px 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;     
+    transform: translateY(0);
+    
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+} */
+
+.feature-card:hover {
+    transform: translateY(-10px);  
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+
+.feature-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;           
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    border: 1px solid green;
+}
+
+.feature-card p {
+    flex-grow: 1;        
+    margin-bottom: 20px;
+}
+
+.feature-card .btn {
+    margin-top: auto;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: transparent;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card .btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #e65656;
+    z-index: -1;
+    transition: all 0.3s ease;
+}
+
+.feature-card .btn:hover::before {
+    left: 0;
+}
+
+.feature-card .btn:hover {
+    color: #fff;
+    border-color: #e65656;
+    transform: translateY(-3px);   /* slight lift */
+}
+
+.subtitle{
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  color:  #e42020!important; 
+  animation: bounceIn 1s ease-out, pulse 3s infinite ease-in-out;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}

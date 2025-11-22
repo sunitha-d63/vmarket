@@ -1,0 +1,18 @@
+
+
+.support-hero h1 {
+    font-size: 42px;
+    color: #d5dae2;
+}
+
+.support-list {
+    list-style: none;
+    padding-left: 0;
+    line-height: 1.8;
+    font-size: 22px;
+    color: #444;
+}
+
+.support-list li {
+    margin-bottom: 6px;
+}

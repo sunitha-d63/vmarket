@@ -1,0 +1,167 @@
+.order-page-container {
+    max-width: 700px;
+    margin: auto;
+    animation: fadeSlideIn 0.5s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-card {
+    animation: cardPop 0.5s ease forwards;
+}
+
+.order-card:nth-child(1) { animation-delay: 0.1s; }
+.order-card:nth-child(2) { animation-delay: 0.2s; }
+.order-card:nth-child(3) { animation-delay: 0.3s; }
+.order-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes cardPop {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-card {
+    position: relative !important;
+    background: transparent !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    padding: 22px 25px !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+    transition: all 0.25s ease-in-out !important;
+    cursor: pointer !important;
+    overflow: hidden !important;
+}
+
+.order-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #b9f5db, #d3f4bf);
+    opacity: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.order-card:hover {
+    transform: translateY(-6px) scale(1.02) !important;
+    background: transparent !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.18) !important;
+}
+
+.order-card * {
+    position: relative;
+    z-index: 1;
+}
+
+.order-status {
+    font-size: 12px !important;
+    padding: 5px 12px !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    display: inline-block !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+.status-pending {
+    background: rgba(239, 222, 112, 0.5) !important;
+    color: #000 !important;
+}
+
+.status-processing {
+    background: rgba(84, 209, 237, 0.5) !important;
+    color: #000 !important;
+}
+
+.status-delivered {
+    background: rgba(51, 213, 89, 0.5) !important;
+    color: #000 !important;
+}
+
+.status-other {
+    background: rgba(237, 229, 71, 0.5) !important;
+    color: #000 !important;
+}
+
+.order-card h4,
+.order-card small,
+.order-card .price,
+.order-card .viewbtn,
+.order-card span,
+.order-card p,
+.order-card div,
+.order-card strong {
+    color: #0a0a0a !important;
+}
+
+h5 {
+    font-size: 12px;
+    font-weight: 700;
+    font-style: italic;
+    color: #e6cd3b !important;
+    animation: bounceIn 1s ease-out, pulse 3s infinite ease-in-out;
+    display: inline-block;
+    letter-spacing: 1px;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.order-animate {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #ff6600;
+    border-radius: 50%;
+    animation: pulse 1s infinite ease-in-out;
+    margin-right: 6px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0.4; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.order-card .viewbtn {
+    color: #de1248 !important;
+    -webkit-text-fill-color: #de1248 !important;
+}

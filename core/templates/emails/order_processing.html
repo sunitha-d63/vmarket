@@ -1,0 +1,20 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<h2>Your Order is Being Packed 📦</h2>
+
+<p>Hi {{ order.full_name }},</p>
+
+<p>Your order <strong>#{{ order.id }}</strong> is now being processed.</p>
+
+<p>
+    Estimated Delivery:  
+    <strong>{{ order.expected_delivery_time|date:"M d, Y H:i A" }}</strong>
+</p>
+<a href="{{ domain }}/track-order/?order_id={{ order.id }}"
+   style="padding:10px 20px; background:#f97316; color:white; 
+          border-radius:8px; text-decoration:none; font-weight:bold;">
+    Track Order
+</a>
+
+{% endblock %}

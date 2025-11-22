@@ -1,0 +1,181 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+{% endblock %} {% block content %}
+<div class="container-fluid adm-container">
+  <header class="adm-header fade-in">
+    <h2 class="subtitle">⚙️ Supermarket Admin Dashboard</h2>
+    <p class="muted">Overview of your store activity</p>
+  </header>
+  <div class="cards-grid">
+    <div class="card-soft box-users fade-in delay-1">
+      <small>Total Customers</small>
+      <h3>{{ total_users }}</h3>
+    </div>
+
+    <div class="card-soft box-products fade-in delay-2">
+      <small>Total Products</small>
+      <h3>{{ total_products }}</h3>
+    </div>
+
+    <div class="card-soft box-orders fade-in delay-3">
+      <small>Total Orders</small>
+      <h3>{{ total_orders }}</h3>
+    </div>
+
+    <div class="card-soft box-sales fade-in delay-4">
+      <small>Total Revenue</small>
+      <h3>₹{{ total_sales|floatformat:2 }}</h3>
+    </div>
+  </div>
+
+  <div class="grid-two fade-in delay-2">
+    <div class="panel card-soft">
+      <div class="panel-head">
+        <h5 class="htitle">📈 Daily Sales</h5>
+      </div>
+      <canvas id="dailySalesChart"></canvas>
+    </div>
+
+    <div class="panel card-soft">
+      <div class="panel-head">
+        <h5 class="htitle">📊 Category Sales</h5>
+      </div>
+      <canvas id="categorySalesChart"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-three fade-in delay-3">
+    <div class="panel card-soft panel-super panel-top-products">
+      <div class="panel-head">
+        <h5 class="htitle">🏆 Top Products</h5>
+      </div>
+      <canvas id="topProductsChart"></canvas>
+    </div>
+
+    <div class="panel card-soft panel-super panel-low-stock">
+      <div class="panel-head">
+        <h5 class="htitle">🔥 Best Selling Items</h5>
+      </div>
+
+      <ul>
+        {% for p in top_selling_items %}
+        <li>{{ p.title }} - <span class="muted">{{ p.sales }} sold</span></li>
+        {% empty %}
+        <li class="muted">No sales data available.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="panel card-soft panel-super panel-delivery-status">
+      <div class="panel-head">
+        <h5 class="htitle">🚚 Delivery Status</h5>
+      </div>
+      <ul class="list-compact">
+        {% for key, value in delivery_status_counts.items %}
+        <li>{{ key|capfirst }} — {{ value }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel card-soft panel-super panel-recent-orders">
+    <div class="panel-head">
+      <h5 class="htitle">🧾 Recent Orders</h5>
+    </div>
+
+    {% if recent_orders %}
+    <div class="table-wrap">
+      <table class="table-compact">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in recent_orders %}
+          <tr class="table-row-animate">
+            <td>#{{ o.id }}</td>
+            <td>{{ o.user.username }}</td>
+            <td>₹{{ o.total_amount|floatformat:2 }}</td>
+            <td><span class="badge">{{ o.status }}</span></td>
+            <td>{{ o.created_at|date:"M d, Y H:i" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="muted">No recent orders found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  (function(){
+      const dailyLabels = {{ daily_sales.labels|safe }};
+      const dailyValues = {{ daily_sales.values|safe }};
+      const categoryLabels = {{ category_sales.labels|safe }};
+      const categoryValues = {{ category_sales.values|safe }};
+      const topLabels = {{ top_products_chart.labels|safe }};
+      const topValues = {{ top_products_chart.values|safe }};
+
+      Chart.defaults.font.family = "'Inter', sans-serif";
+      Chart.defaults.color = "#333";
+      new Chart(document.getElementById("dailySalesChart"), {
+          type: 'line',
+          data: {
+              labels: dailyLabels,
+              datasets: [{
+                  label: "Sales",
+                  data: dailyValues,
+                  borderColor: "rgba(75, 85, 255, 0.9)",
+                  backgroundColor: "rgba(75, 85, 255, 0.18)",
+                  tension: 0.4,
+                  fill: true,
+                  borderWidth: 2
+              }]
+          },
+          options: { plugins: { legend: { display: false } } }
+      });
+      new Chart(document.getElementById("categorySalesChart"), {
+          type: 'bar',
+          data: {
+              labels: categoryLabels,
+              datasets: [{
+                  label: "Sales",
+                  data: categoryValues,
+                  backgroundColor: "rgba(16, 185, 129, 0.25)",
+                  borderColor: "rgba(16, 185, 129, 0.9)",
+                  borderWidth: 1
+              }]
+          },
+          options: { plugins: { legend: { display: false } } }
+      });
+      new Chart(document.getElementById("topProductsChart"), {
+          type: 'bar',
+          data: {
+              labels: topLabels,
+              datasets: [{
+                  label: "Orders",
+                  data: topValues,
+                  backgroundColor: "rgba(59,130,246,0.25)",
+                  borderColor: "rgba(59,130,246,0.9)",
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              plugins: { legend: { display: false } },
+              indexAxis: 'y'
+          }
+      });
+
+  })();
+</script>
+{% endblock %}

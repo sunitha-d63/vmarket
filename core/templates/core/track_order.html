@@ -1,0 +1,177 @@
+{% extends 'core/base.html' %} {% load static %}
+{% load humanize %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<link rel="stylesheet" href="{% static 'css/track_order.css' %}" />
+
+{% endblock %} {% block content %}
+<div class="container py-5 ">
+  <div class="card shadow-lg p-4 rounded-4 trackcontainer">
+    <h5 class="text-center mb-4 fw-bold fs-4">Track Your Order</h5>
+
+     <form method="GET" id="trackForm" action="{% url 'track_order' %}">
+    <div class="input-group mb-3">
+        <input
+            type="number"
+            name="order_id"
+            class="form-control"
+            placeholder="Enter Order ID"
+            value="{{ order_id|default:'' }}"
+        />
+        <button class="btn btn-warning px-4">Track</button>
+    </div>
+</form>
+
+{% if not_found and order_id %}
+    <p id="orderError" class="text-danger mt-3">
+        No order found with ID #{{ order_id }}.
+    </p>
+{% endif %}
+
+
+
+
+    {% if order %}
+
+    {% if order.status not in "out_for_delivery delivered cancelled" %}
+    <div class="d-flex justify-content-end gap-2 mb-3">
+      <a
+        href="{% url 'edit_order' order.id %}"
+        class="btn btn-warning action-btn d-flex align-items-center gap-1"
+      >
+        ✏️ Edit
+      </a>
+
+      <button
+        class="btn btn-danger action-btn d-flex align-items-center gap-1"
+        data-bs-toggle="modal"
+        data-bs-target="#cancelConfirmModal"
+      >
+        ❌ Cancel
+      </button>
+    </div>
+    {% endif %}
+
+    <div class=" p-3 rounded">
+      <h5>Order #{{ order.id }}</h5>
+      <p><strong>Status:</strong> {{ order.status|capfirst }}</p>
+      <p>
+        <strong>Expected Delivery:</strong>
+        <span id="deliveryTime" class="expected-delivery-highlight" style="cursor:pointer; font-weight:700; color:#d35400;">
+          {{ order.expected_delivery_time|date:"M d, Y h:i A" }}
+          ({{ order.expected_delivery_time|naturaltime }})
+        </span>
+      </p>
+
+      <div id="etaBox" class="mb-2 fw-bold text-success"></div>
+      <div
+        id="orderData"
+        data-order-id="{{ order.id }}"
+        data-cust-lat="{{ order.latitude }}"
+        data-cust-lon="{{ order.longitude }}"
+        data-driver-lat="{{ order.current_latitude }}"
+        data-driver-lon="{{ order.current_longitude }}"
+        data-created="{{ order.created_at|date:'c' }}"
+        data-expected="{{ order.expected_delivery_time|date:'c' }}"
+      ></div>
+
+      <div
+        id="map"
+        style="height: 350px; width: 100%; border-radius: 10px"
+      ></div>
+
+      <div id="liveLocationText" class="text-center mt-2 fw-semibold"></div>
+
+      <div class="delivery-track position-relative rounded-pill bg-light mt-3">
+        <div
+          id="progressFill"
+          class="bg-warning rounded-pill"
+          style="height: 100%; width: 0%; transition: width 1s"
+        ></div>
+        <div id="truckIcon">🚚</div>
+      </div>
+      <h6 class="mt-3">Order Summary</h6>
+      <ul>
+        {% for item in order.items.all %}
+        <li>{{ item.product.title }} × {{ item.quantity }}</li>
+        {% endfor %}
+      </ul>
+
+      <p><strong>Total:</strong> ₹{{ order.total_amount }}</p>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning">Enter an Order ID to start tracking.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %} 
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+{% if order %}
+
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-danger">Confirm Cancellation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        Are you sure you want to cancel this order?
+      </div>
+
+      <div class="modal-footer border-0 justify-content-center">
+        <button class="btn btn-secondary px-3" data-bs-dismiss="modal">No</button>
+        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger px-3">Yes</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delayModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius:12px;">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-warning fw-bold">Delivery Update</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body" id="delayMessage" style="font-size:15px;"></div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-warning w-100" data-bs-dismiss="modal">OK</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const input = document.querySelector("input[name='order_id']");
+    const errorMsg = document.getElementById("orderError");
+
+    if (input && errorMsg) {
+        input.addEventListener("input", function() {
+            if (input.value === "") {
+                errorMsg.style.display = "none";
+            }
+        });
+    }
+});
+</script>
+<!-- LOAD YOUR TRACKER JS *AFTER* THE MODALS EXIST -->
+<script src="{% static 'js/track_order.js' %}"></script>
+{% endblock %}
+
+

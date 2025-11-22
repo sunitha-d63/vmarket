@@ -1,0 +1,116 @@
+
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/delivery.css' %}">
+{% endblock %}
+{% block content %}
+<section class="delivery-hero">
+    <div class="container text-center">
+        <h1>Super Fast Delivery</h1>
+        <p>Groceries delivered in <strong>30–60 minutes</strong> at your doorstep.</p>
+        <a href="/" class="btn btn-primary hero-btn">Start Shopping</a>
+    </div>
+</section>
+<section class="delivery-steps container py-5">
+    <h2 class="text-center mb-4 text-warning">How Our Delivery Works</h2>
+
+    <div class="row g-4">
+        <div class="col-md-3 text-center">
+            <img src="{% static 'images/fruits.jpg' %}" class="step-icon" alt="">
+            <h5>Select Products</h5>
+            <p>Choose fresh groceries and daily essentials.</p>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <img src="{% static 'images/loc1.webp' %}" class="step-icon" alt="">
+            <h5>Add Your Address</h5>
+            <p>Enter your accurate delivery location.</p>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <img src="{% static 'images/time.jpg' %}" class="step-icon" alt="">
+            <h5>Choose Delivery Slot</h5>
+            <p>Pick a time that suits you best.</p>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <img src="{% static 'images/fast.jpg' %}" class="step-icon" alt="">
+            <h5>Fast Delivery</h5>
+            <p>Our rider delivers your order quickly.</p>
+        </div>
+    </div>
+</section>
+<section class="coverage-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-3 text-success">Delivery Areas We Cover</h2>
+        <p class="text-center mb-4">We currently deliver in the following zones:</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="coverage-box">
+                    <h5>City Center</h5>
+                    <p>Fast delivery within 30 minutes!</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="coverage-box">
+                    <h5>North & East Side</h5>
+                    <p>Wide coverage near residential areas.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="coverage-box">
+                    <h5>Tech Park Zone</h5>
+                    <p>Perfect for office deliveries.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="text-center mb-4 subtitle fs-4">Delivery Charges</h2>
+
+    <ul class="list-group pricing-list">
+        <li class="list-group-item"><strong>Free Delivery</strong> on orders above ₹399</li>
+        <li class="list-group-item mb-2"><strong>₹29</strong> delivery fee for orders below ₹399</li>
+        <li class-group-item><strong>Express Delivery:</strong> +₹20 extra</li>
+    </ul>
+</section>
+
+<section class="safety-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4 text-warning">Our Hygiene & Safety Promise</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="safety-box">
+                    <h5>Sanitized Packaging</h5>
+                    <p>All products are packed in a clean, sanitized environment.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="safety-box">
+                    <h5>Contactless Delivery</h5>
+                    <p>Delivered safely at your door without physical contact.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="safety-box">
+                    <h5>Verified Riders</h5>
+                    <p>All riders are trained & health-checked regularly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container text-center">
+        <h2>Ready to Order?</h2>
+        <p>Get your groceries delivered fast and fresh!</p>
+        <a href="/" class="btn btn-lg btn-dark">Start Shopping</a>
+    </div>
+</section>
+{% endblock %}

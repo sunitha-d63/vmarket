@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cancel_order.css' %}" />
+{% endblock %} {% block content %}
+<div class="container py-4">
+  <div class="card shadow p-4 mt-4 cancelcard">
+    <h3 class="text-danger fw-bold">Cancel Order #{{ order.id }}</h3>
+    <p class="text-muted">Please tell us why you're cancelling this order.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <div class="custom-dropdown" id="reasonDropdown">
+          <div class="dropdown-selected">
+            <span class="selected-text">Select Reason</span>
+            <span class="arrow">▼</span>
+          </div>
+
+          <ul class="dropdown-list">
+            {% for value, label in form.reason.field.choices %}
+            <li data-value="{{ value }}">{{ label }}</li>
+            {% endfor %}
+          </ul>
+
+          <input type="hidden" name="reason" id="reasonInput" />
+        </div>
+        <div class="mt-3" id="other-reason-wrapper" style="display: none">
+          <label class="form-label">Other Reason (optional)</label>
+          {{ form.other_reason }}
+        </div>
+      </div>
+
+      <button class="btn btn-danger w-100 mt-3">Confirm Cancellation</button>
+    </form>
+    <div class="mt-3 text-center">
+      <a href="{% url 'order_confirmation' order.id %}" class="text-warning"
+        >Back to Order</a
+      >
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/cancel_order.js' %}"></script>
+{% endblock %}

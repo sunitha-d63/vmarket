@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_order.css' %}" />
+
+{% endblock %} {% block content %}
+<div class="container py-4 order-page-container">
+  <h5 class="fw-bold mb-4 text-center fs-3">My Orders</h5>
+  {% if orders %}
+  <div class="order-list">
+    {% for order in orders %}
+    <div
+      class="order-card mb-3"
+      onclick="window.location='{% url 'order_confirmation' order.id %}'"
+    >
+      <div class="row align-items-center">
+        <div class="col-md-8">
+            <h4 class="mb-1 fw-semibold fs-3">
+  <span class="order-animate"></span> Order {{ order.id }}
+</h4>
+          <small class="text-muted fs-5">
+            Placed on {{ order.created_at|date:"M d, Y" }}
+          </small>
+
+          <div class="mt-2">
+            <span
+              class="order-status {% if order.status == 'pending' %} status-pending {% elif order.status == 'processing' %} status-processing {% elif order.status == 'delivered' %} status-delivered {% else %} status-other {% endif %}"
+            >
+              {{ order.status|capfirst }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-end">
+          <div class="price fs-4">₹{{ order.total_amount }}</div>
+          <a class="small viewbtn">View Details →</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-center text-muted">You have no orders yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

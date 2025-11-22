@@ -1,0 +1,21 @@
+/* .payment-hero {
+    background: #fff3e0;
+    border-bottom: 2px solid #ffe0b2;
+} */
+
+.payment-hero h1 {
+    font-size: 42px;
+    color: #fff3e0;
+}
+
+.payment-list {
+    list-style: none;
+    padding-left: 0;
+    line-height: 1.8;
+    font-size: 22px;
+    color: #444;
+}
+
+.payment-list li {
+    margin-bottom: 6px;
+}

@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/Wishlist.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <h2 class="wishlist-heading text-center mb-5">💖 Your Wishlist</h2>
+
+    {% if wishlist_items %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        {% for product in wishlist_items %}
+        <div class="col">
+            <div class="wishlist-card shadow-sm border-0 position-relative">
+
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{{ product.image.url }}" class="wishlist-img" alt="{{ product.title }}">
+                </a>
+
+                <div class="p-3 text-center">
+                    <h5 class="fw-bold text-uppercase mb-1">{{ product.title }}</h5>
+
+                    {% if product.is_offer_active %}
+                        <p class="fw-semibold text-secondary mb-1">
+
+                            <span class="pricecolor text-decoration-line-through me-2">
+                                ₹{{ product.base_price|floatformat:2 }}
+                            </span>
+
+                            <span class="text-danger fw-bold">
+                                ₹{{ product.discounted_price|floatformat:2 }}
+                            </span>
+
+                            {% if product.unit == "piece" %}
+                                <span class="small">per pc</span>
+                            {% elif product.unit == "pack" %}
+                                <span class="small">per pack</span>
+                            {% elif product.unit == "dozen" %}
+                                <span class="small">per dozen</span>
+                            {% else %}
+                                <span class="small">/ {{ product.unit }}</span>
+                            {% endif %}
+                        </p>
+
+                    {% else %}
+                        <p class="fw-semibold text-secondary mb-1">
+                            ₹{{ product.base_price|floatformat:2 }}
+
+                            {% if product.unit == "piece" %}
+                                <span class="small">per pc</span>
+                            {% elif product.unit == "pack" %}
+                                <span class="small">per pack</span>
+                            {% elif product.unit == "dozen" %}
+                                <span class="small">per dozen</span>
+                            {% else %}
+                                <span class="small">/ {{ product.unit }}</span>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                <div class="text-center pb-3">
+                    <form action="{% url 'toggle_wishlist' product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="remove-btn">Remove ❤️</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning text-center mt-5 shadow-sm py-4">
+        Your wishlist is empty.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

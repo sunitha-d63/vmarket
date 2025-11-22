@@ -1,0 +1,51 @@
+body {
+  background-color: #f7f9fc;
+  font-family: "Poppins", sans-serif;
+}
+
+.category-banner {
+  background: linear-gradient(90deg, #28a745, #20c997);
+  border-radius: 0;
+}
+
+.filter-card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.list-group-item {
+  border: none;
+  padding: 12px 18px;
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f1fdf5;
+  cursor: pointer;
+}
+
+.product-card {
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  background-color: #fff;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card img {
+  height: 220px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.btn {
+  border-radius: 8px;
+}
+
+.badge {
+  font-size: 0.8rem;
+}

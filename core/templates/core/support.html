@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/support.css' %}">
+<link rel="stylesheet" href="{% static 'css/fresh-organic.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="support-hero text-center py-5">
+    <h1 class="fw-bold subtitle fs-2">24/7 Customer Support</h1>
+    <p class="mt-2">We're here anytime you need help — day or night.</p>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <img src="{% static 'images/fea6.webp' %}" class="feature-img-circle" alt="">
+        </div>
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+                <h3 class="fw-bold mb-3 subtitle fs-4">How We Support You</h3>
+
+                <ul class="support-list">
+                    <li>📞 24/7 phone support for urgent help</li>
+                    <li>💬 Instant live chat assistance</li>
+                    <li>📧 Email support with quick responses</li>
+                    <li>🤝 Help with orders, refunds, and delivery issues</li>
+                    <li>⭐ Friendly team dedicated to customer satisfaction</li>
+                </ul>
+
+                <a href="/contact/" class="btn btn-dark mt-3">Get Help Now</a>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

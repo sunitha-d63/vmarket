@@ -1,0 +1,199 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}" />
+{% endblock %} {% block content %}
+<div class="container py-4">
+  <h2 class="text-center mb-4 fw-bold cart-heading">🛒 Your Cart</h2>
+
+  {% if cart_items %}
+  <div class="row">
+    <!-- Cart List -->
+    <div class="col-lg-8 animate-left">
+      {% for item in cart_items %}
+      <div class="card cart-card shadow-sm border-0 mb-3 lift-hover">
+        <div class="row g-0 align-items-center">
+          <!-- Image -->
+          <div class="col-md-4 p-0">
+            {% if is_guest %}
+            <img
+              src="{{ item.image }}"
+              class="img-fluid cart-img rounded-start"
+              alt=""
+            />
+            {% else %}
+            <img
+              src="{{ item.product.image.url }}"
+              class="img-fluid cart-img rounded-start"
+              alt=""
+            />
+            {% endif %}
+          </div>
+
+          <!-- Details -->
+          <div class="col-md-8">
+            <div class="card-body cart-card-body">
+              <div
+                class="cart-row d-flex flex-column flex-md-row justify-content-between align-items-md-center"
+              >
+                <!-- PRODUCT TITLE + WEIGHT + PRICE PER UNIT -->
+                <div>
+                  <div class="cart-title text-uppercase fw-bold mb-1">
+                    {% if is_guest %}{{ item.title }}{% else %}{{
+                    item.product.title }}{% endif %}
+                  </div>
+
+                  <div class="cart-info text-muted small mb-2">
+                    <strong>Weight:</strong> {{ item.weight }} {% if not
+                    is_guest %}
+                    <span class="text-muted"
+                      >({{ item.converted_weight }} {{ item.product.unit
+                      }})</span
+                    >
+                    {% endif %}
+                  </div>
+
+                  {% if not is_guest %} {% if item.product.is_offer_active %}
+                  <p class="mb-1">
+                    <span class="text-decoration-line-through text-muted me-2">
+                      ₹{{ item.product.base_price|floatformat:2 }}
+                    </span>
+                    <span class="text-danger fw-bold">
+                      ₹{{ item.product.discounted_price|floatformat:2 }}
+                    </span>
+                    <span class="text-muted small"
+                      >/ {{ item.product.unit }}</span
+                    >
+                  </p>
+                  {% else %}
+                  <p class="mb-1 fw-semibold">
+                    ₹{{ item.product.base_price|floatformat:2 }}
+                    <span class="text-muted small"
+                      >/ {{ item.product.unit }}</span
+                    >
+                  </p>
+                  {% endif %} {% endif %}
+                </div>
+
+                <!-- QUANTITY -->
+                <div class="cart-qty my-2 my-md-0">
+                  <label class="fw-semibold mb-0 me-2">Qty:</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantityInput"
+                    class="form-control text-center quantity d-inline-block"
+                    value="{{ item.quantity }}"
+                    min="1"
+                    data-id="{% if is_guest %}{{ forloop.counter0 }}{% else %}{{ item.id }}{% endif %}"
+                  />
+                </div>
+
+                <!-- PRICE -->
+                <div class="cart-price fw-semibold">
+                  <strong>Price:</strong>
+                  ₹<span
+                    id="price-{% if is_guest %}{{ forloop.counter0 }}{% else %}{{ item.id }}{% endif %}"
+                  >
+                    {{ item.final_price|floatformat:2 }}
+                  </span>
+                </div>
+
+                <!-- REMOVE -->
+                <div class="cart-remove text-md-end mt-2 mt-md-0">
+                  {% if is_guest %}
+                  <a
+                    href="{% url 'remove_from_cart_guest' forloop.counter0 %}"
+                    class="btn btn-danger btn-sm"
+                    >Remove</a
+                  >
+                  {% else %}
+                  <a
+                    href="{% url 'remove_from_cart' item.id %}"
+                    class="btn btn-danger btn-sm"
+                    >Remove</a
+                  >
+                  {% endif %}
+                  <input
+                    type="hidden"
+                    class="weight-mult"
+                    value="{{ item.converted_weight }}"
+                  />
+                  {% if is_guest %}
+                  <input
+                    type="hidden"
+                    class="unit-price"
+                    value="{{ item.final_price }}"
+                  />
+                  <input
+                    type="hidden"
+                    class="weight-mult"
+                    value="{{ item.weight_multiplier }}"
+                  />
+                  {% else %}
+                  <input
+                    type="hidden"
+                    class="unit-price"
+                    value="{% if item.product.is_offer_active %}{{ item.product.discounted_price }}{% else %}{{ item.product.base_price }}{% endif %}"
+                  />
+                  <input
+                    type="hidden"
+                    class="weight-mult"
+                    value="{{ item.converted_weight }}"
+                  />
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-4 animate-right">
+      <div
+        class="cart-summary shadow-sm p-4 mt-4 rounded-4 bg-white lift-hover"
+      >
+        <h4 class="fw-semibold mb-3 text-warning">Order Summary</h4>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Subtotal:</span>
+          <span>₹<span id="subtotal">{{ subtotal|floatformat:2 }}</span></span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Tax (5%):</span>
+          <span>₹<span id="tax">{{ tax|floatformat:2 }}</span></span>
+        </div>
+
+        <hr />
+
+        <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+          <span>Total:</span>
+          <span>₹<span id="total">{{ total|floatformat:2 }}</span></span>
+        </div>
+
+        {% if user.is_authenticated %}
+        <a
+          href="{% url 'payment_page' %}"
+          class="btn btn-lg w-100 shadow-sm btnbuy"
+          >Proceed to Buy</a
+        >
+        {% else %}
+        <a
+          href="{% url 'login' %}?next={% url 'payment_page' %}"
+          class="btn btn-lg w-100 shadow-sm btnbuy"
+          >Proceed to Buy</a
+        >
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="alert alert-warning text-center mt-5">Your cart is empty.</div>
+  {% endif %}
+</div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

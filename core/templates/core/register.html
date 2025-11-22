@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+  <div class="login-box">
+    <h2 class="mb-4 text-center">Register</h2>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {% for error in form.non_field_errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+
+        {% if field.field.widget.input_type == "password" %}
+            <input 
+              type="password"
+              name="{{ field.html_name }}"
+              id="{{ field.id_for_label }}"
+              class="form-control"
+              placeholder="{{ field.label }}"
+              required
+            >
+        {% else %}
+            {{ field }}
+        {% endif %}
+
+        {% if field.errors %}
+        <div class="text-danger small mt-1">
+          {% for error in field.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="btn bg-warning w-100">Register</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account?
+      <a class="text-black fs-6" href="{% url 'login' %}">Login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // PHONE NUMBER LIVE CHECK + VALIDATION
+  document.addEventListener("DOMContentLoaded", function () {
+    const phoneInput = document.getElementById("id_phone");
+    if (phoneInput) {
+      const phoneFeedback = document.createElement("div");
+      phoneFeedback.className = "small mt-1";
+      phoneInput.parentNode.appendChild(phoneFeedback);
+
+      phoneInput.addEventListener("input", async function () {
+        const phone = phoneInput.value.trim();
+
+        if (!/^[6-9]\d{9}$/.test(phone)) {
+          phoneFeedback.textContent = "";
+          return;
+        }
+
+        phoneFeedback.textContent = "⏳ Checking...";
+        phoneFeedback.className = "text-secondary small mt-1";
+
+        try {
+          const res = await fetch(`/ajax/check-phone/?phone=${encodeURIComponent(phone)}`);
+          const data = await res.json();
+
+          if (data.exists) {
+            phoneFeedback.textContent = "⚠️ This phone number is already registered.";
+            phoneFeedback.className = "text-danger small mt-1";
+          } else {
+            phoneFeedback.textContent = "✅ Phone number available.";
+            phoneFeedback.className = "text-success small mt-1";
+          }
+
+        } catch {
+          phoneFeedback.textContent = "⚠️ Unable to check number right now.";
+          phoneFeedback.className = "text-warning small mt-1";
+        }
+      });
+    }
+  });
+</script>
+
+<script>
+  // CUSTOM SELECT (Role dropdown)
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("select").forEach(function (selectElement) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "custom-select-wrapper";
+
+      const display = document.createElement("div");
+      display.className = "custom-select-display";
+      display.innerText = selectElement.options[selectElement.selectedIndex].text;
+
+      const optionBox = document.createElement("div");
+      optionBox.className = "custom-select-options";
+
+      Array.from(selectElement.options).forEach((option) => {
+        const opt = document.createElement("div");
+        opt.className = "custom-select-option";
+        opt.innerText = option.text;
+        opt.dataset.value = option.value;
+
+        if (option.selected) opt.classList.add("selected");
+
+        opt.onclick = () => {
+          selectElement.value = opt.dataset.value;
+          display.innerText = opt.innerText;
+          optionBox.style.display = "none";
+          optionBox.querySelectorAll("div").forEach((o) => o.classList.remove("selected"));
+          opt.classList.add("selected");
+        };
+
+        optionBox.appendChild(opt);
+      });
+
+      display.onclick = () => {
+        optionBox.style.display = optionBox.style.display === "block" ? "none" : "block";
+      };
+
+      selectElement.style.display = "none";
+      selectElement.parentNode.insertBefore(wrapper, selectElement);
+      wrapper.appendChild(selectElement);
+      wrapper.appendChild(display);
+      wrapper.appendChild(optionBox);
+    });
+  });
+</script>
+
+<script>
+  // AUTO REMOVE FIELD ERRORS WHEN TYPING
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("input, select, textarea").forEach(function (field) {
+        field.addEventListener("input", function () {
+            const errorBlock = this.parentElement.querySelector(".text-danger");
+            if (errorBlock) errorBlock.remove();
+        });
+    });
+  });
+</script>
+{% endblock %}

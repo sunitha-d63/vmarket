@@ -1,0 +1,229 @@
+.order-confirmation
+{
+  border-radius: 10px;
+}
+
+.title1
+{
+  color: #e42020;
+
+}
+.confirmation-card {
+ background: transparent !important;
+  border-radius: 20px;
+}
+.success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.order-info, .delivery-info, .order-summary, .tracking {
+  border-left: 4px solid #e27655;
+}
+h4 {
+  font-weight: 600;
+}
+.progress {
+  background-color: #e9ecef;
+  border-radius: 12px;
+}
+.progress-bar {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 12px;
+}
+  .delivery-track {
+    position: relative;
+    height: 25px;
+    background-color: #e9ecef;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    transition: width 1s ease;
+    border-radius: 20px;
+  }
+  .truck-icon {
+    position: absolute;
+    top: -12px;
+    transition: left 1s ease;
+    font-size: 28px;
+  }
+      .confirmation-card {
+        background: #fdfdfd;
+        border-radius: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+.left-card
+{
+   background: linear-gradient(135deg, #c5fad1, #c8f4bf) !important;
+   /* border: 1px solid red; */
+    border-radius: 50px !important;
+
+}
+    .section-card {
+        background: linear-gradient(135deg, #c5fad1, #c8f4bf) !important;
+        padding: 25px;
+        border-radius: 50px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+        margin-bottom: 25px;
+    }
+    .lititle
+    {
+      background: transparent !important;
+      color: #d35400;
+    }
+
+    .section-title {
+        font-weight: 600;
+        font-size: 20px;
+        color: #d35400;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+
+    .delivery-track {
+        position: relative;
+        background: #f1f1f1;
+        height: 12px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 10px;
+        transition: width 0.3s linear;
+    }
+
+    .truck-icon {
+        position: absolute;
+        top: -25px;
+        font-size: 25px;
+        transition: left 0.3s linear;
+    }
+
+.animate-left {
+  animation: slideLeft 0.8s ease;
+}
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-right {
+  animation: slideRight 0.8s ease;
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.custom-modal {
+    border-radius: 18px;
+    animation: scaleIn 0.25s ease;
+    backdrop-filter: blur(6px);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.45);
+}
+#countdownTimer {
+  display: inline-block;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#countdownTimer.animate {
+  transform: scale(1.25);
+  color: #e63946 !important;
+}
+
+.modal-backdrop.show {
+    background: rgba(0, 0, 0, 0.35) !important;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.25) !important;
+
+    background: linear-gradient(145deg, #ffffff, #f2fff1) !important;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #d7ffe0, #c1f7b5);
+    padding: 18px 22px !important;
+    border-bottom: none !important;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2b5b34 !important;
+}
+
+.modal-header .btn-close {
+    background: none !important;
+    opacity: 0.7 !important;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1 !important;
+}
+
+.modal-body {
+    padding: 25px 22px !important;
+    color: #333;
+    font-size: 16px;
+}
+
+.modal-footer {
+    padding: 15px 20px !important;
+    border-top: none !important;
+    background: rgba(255,255,255,0.4);
+}
+
+.modal-footer .btn {
+    border-radius: 12px !important;
+    padding: 10px 18px !important;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.modal-footer .btn-secondary {
+    background: #6c757d !important;
+    border: none !important;
+}
+
+.modal-footer .btn-danger {
+    background: #e63946 !important;
+    border: none !important;
+}
+.edit,.cancel
+{
+   border-radius: 50px !important;
+}
+

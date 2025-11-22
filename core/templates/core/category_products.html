@@ -1,0 +1,161 @@
+{% extends 'core/base.html' %} {% load static %}
+{% load wishlist_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/category_products.css' %}" />
+{% endblock %} {% block content %}
+<div class="my-5">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb trendy-breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'home' %}" class="crumb-link">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'offers_page' %}" class="crumb-link">Offers</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        <span class="crumb-current">{{ category.name }}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <div>
+      <h2 class="fw-bold text-uppercase mb-0">{{ category.name }}</h2>
+      <p class="text-muted mb-0">
+        Explore the best {{ category.name|lower }} with exclusive deals.
+      </p>
+    </div>
+
+    <div class="mt-3 mt-md-0 d-flex align-items-center">
+      <label class="me-2 fw-semibold text-secondary">Sort by:</label>
+
+      <div class="dropdown">
+        <button
+          class="btn custom-select-btn dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          {% if sort == "price_low" %} Price: Low → High 
+          {% elif sort == "price_high" %} Price: High → Low {% elif sort == "name_asc" %} Name:
+          A → Z {% elif sort == "name_desc" %} Name: Z → A {% else %} Default 
+          {%endif %}
+        </button>
+
+        <ul class="dropdown-menu custom-select-menu">
+          <li><a class="dropdown-item" href="?sort=">Default</a></li>
+          <li>
+            <a class="dropdown-item" href="?sort=price_low"
+              >Price: Low → High</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="?sort=price_high"
+              >Price: High → Low</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="?sort=name_asc">Name: A → Z</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="?sort=name_desc">Name: Z → A</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products %}
+    <div class="col animate-card">
+      <div
+        class="card product-card h-100 border-0 shadow-sm position-relative rounded-4">
+        <form
+          action="{% url 'toggle_wishlist' product.id %}"
+          method="post"
+          class="wishlist-form position-absolute top-0 end-0 m-2">
+          {% csrf_token %}
+          <button
+    type="submit"
+    class="wishlist-btn bg-white border-0 rounded-circle shadow-sm p-2"
+>
+{% if user.is_authenticated %}
+    {% if product|in_user_wishlist:user %}
+        <span class="heart-icon heart-red">❤️</span>
+    {% else %}
+        <span class="heart-icon heart-empty">🤍</span>
+    {% endif %}
+
+{% else %}
+    {% if product.id in guest_wishlist_ids %}
+        <span class="heart-icon heart-red">❤️</span>
+    {% else %}
+        <span class="heart-icon heart-empty">🤍</span>
+    {% endif %}
+{% endif %}
+
+
+</button>
+
+
+        </form>
+        {% if product.is_offer_active %}
+        <span
+          class="badge bg-danger position-absolute top-0 start-0 m-2 px-3 py-2 rounded-pill shadow-sm"
+        >
+          {{ product.discount_percent }}% OFF
+        </span>
+        {% endif %}
+
+        <a href="{{ product.get_absolute_url }}" class="card-img-link">
+          <img
+            src="{{ product.image.url }}"
+            class="card-img-top rounded-top-4"
+            alt="{{ product.title }}"
+          />
+        </a>
+
+        <div
+          class="card-body text-center d-flex flex-column justify-content-between"
+        >
+          <h5 class="card-title fs-5 fw-bold text-uppercase mb-2">
+            {{ product.title }}
+          </h5>
+          <div
+            class="card-price-block d-flex flex-column justify-content-center align-items-center"
+            style="min-height: 72px"
+          >
+            {% if product.is_offer_active %}
+            <div class="d-flex align-items-center gap-1">
+              <span class="text-decoration-line-through text-muted">
+                ₹{{ product.base_price|floatformat:2 }}
+              </span>
+              <span class="fw-bold text-danger">
+                ₹{{ product.discounted_price|floatformat:2 }}
+              </span>
+              <span class="text-muted">/ {{ product.unit }}</span>
+            </div>
+            <div class="text-muted small">
+              {{ product.offer_remaining_time }}
+            </div>
+            {% else %}
+            <div class="d-flex align-items-center gap-1">
+              <span class="fw-bold text-success">
+                ₹{{ product.base_price|floatformat:2 }}
+              </span>
+              <span class="text-muted">/ {{ product.unit }}</span>
+            </div>
+            <div class="invisible small">placeholder</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-warning text-center fw-semibold shadow-sm">
+        No products found in this category.
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

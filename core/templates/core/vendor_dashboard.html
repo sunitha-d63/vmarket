@@ -1,0 +1,141 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vendor_dashboard.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4 vendercontainer">
+
+  <h2 class="text-center mb-4 fw-bold">Vendor Dashboard</h2>
+  <div class="row text-center mb-5">
+    <div class="col-md-4">
+      <div class="card shadow-sm  p-3 border-0 card-soft box-users fade-in delay-1">
+        <h5 class="text-light fw-bold mb-0">₹{{ total_revenue|floatformat:2 }}</h5>
+        <p class="text-muted mb-0">Total Revenue</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm  p-3 border-0  card-soft box-products fade-in delay-2">
+        <h5 class="text-light fw-bold mb-0">{{ total_orders }}</h5>
+        <p class="text-muted mb-0">Total Orders</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3 border-0  card-soft box-orders fade-in delay-3">
+        <h5 class="text-light fw-bold mb-0">{{ total_products }}</h5>
+        <p class="text-muted mb-0">Active Products</p>
+      </div>
+    </div>
+  </div>
+  <div class="card p-4 mb-5 shadow-sm formcard">
+    <h5 class="fw-semibold addtitle mb-3">Add New Product</h5>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row g-3">
+        {% for field in form %}
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+          <div class="text-danger small">{{ field.errors.0 }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-warning mt-4 w-100 py-2">Add Product</button>
+    </form>
+  </div>
+ 
+  <div class="card p-4 shadow-sm">
+    <h5 class="fw-semibold addtitle mb-3">Your Products</h5>
+    {% if products %}
+    <div class="table-responsive">
+    <table class="table table-striped align-middle text-center">
+      <thead class="table-warning">
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Weight Options</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td><img src="{{ p.image.url }}" width="60" class="rounded"></td>
+          <td>{{ p.title }}</td>
+          <td>₹{{ p.base_price }}</td>
+          <td>{{ p.category.name }}</td>
+          <td>{{ p.weight_options }}</td>
+          <td>
+            <a href="{% url 'edit_product' p.id %}" class="action-edit">✏️</a>
+            <a href="{% url 'delete_product' p.id %}" class="action-delete"
+   onclick="return confirm('Are you sure you want to delete {{ p.title }}?')">🗑️</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+    {% else %}
+    <p class="text-muted">No products added yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll("select").forEach(function (selectElement) {
+
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "custom-select-wrapper";
+
+
+        const display = document.createElement("div");
+        display.className = "custom-select";
+        display.innerText = selectElement.options[selectElement.selectedIndex]?.text;
+
+        const optionBox = document.createElement("div");
+        optionBox.className = "custom-options";
+
+        Array.from(selectElement.options).forEach(option => {
+            const opt = document.createElement("div");
+            opt.innerText = option.text;
+            opt.dataset.value = option.value;
+
+            if (option.selected) opt.classList.add("selected");
+
+            opt.addEventListener("click", () => {
+                selectElement.value = opt.dataset.value;
+                display.innerText = opt.innerText;
+
+                optionBox.querySelectorAll("div").forEach(o => o.classList.remove("selected"));
+                opt.classList.add("selected");
+
+                optionBox.style.display = "none";
+            });
+
+            optionBox.appendChild(opt);
+        });
+
+
+        display.addEventListener("click", () => {
+            optionBox.style.display = (optionBox.style.display === "block") ? "none" : "block";
+        });
+
+        selectElement.style.display = "none";
+        selectElement.parentNode.insertBefore(wrapper, selectElement);
+        wrapper.appendChild(selectElement);
+        wrapper.appendChild(display);
+        wrapper.appendChild(optionBox);
+    });
+});
+</script>
+
+{% endblock %}

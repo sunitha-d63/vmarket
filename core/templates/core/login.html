@@ -1,0 +1,170 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+
+<style>
+.password-wrapper {
+    position: relative;
+}
+.password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+.password-toggle:hover {
+    color: #000;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="login-wrapper">
+  <div class="login-box">
+
+    <h2 class="mb-4 text-center">Login</h2>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <!-- EMAIL FIELD -->
+      <div class="mb-3">
+        <label for="id_username">Email</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+          <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- PASSWORD FIELD -->
+      <div class="mb-3">
+        <label for="id_password">Password</label>
+        <div class="password-wrapper">
+          {{ form.password }}
+          <span class="password-toggle" onclick="togglePassword()">👁</span>
+        </div>
+
+        {% for error in form.password.errors %}
+          <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="text-end mb-2">
+        <a href="{% url 'forgot_password' %}" class="text-black" style="font-size: 14px">
+          Forgot Password?
+        </a>
+      </div>
+
+      <button type="submit" class="btn bg-warning w-100 py-2">Login</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Don't have an account?
+      <a class="text-black fs-6" href="{% url 'register' %}">Register</a>
+    </p>
+
+  </div>
+</div>
+<div id="resetSuccessPopup" class="success-popup" style="display:none;">
+  <div class="success-popup-content">
+    <div class="success-icon">✔</div>
+    <h5 class="fw-bold mb-1">Password Reset Successful!</h5>
+    <p class="small text-muted mb-3">You can now log in with your new password.</p>
+    <button class="btn btn-warning text-dark fw-semibold px-4" onclick="closeResetSuccessPopup()">OK</button>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+function togglePassword() {
+    let input = document.getElementById("id_password");
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("input").forEach(function (field) {
+      field.addEventListener("input", function () {
+        const errorBlock = this.parentElement.querySelector(".text-danger");
+        if (errorBlock) errorBlock.remove();
+      });
+    });
+  });
+
+  function closeResetSuccessPopup() {
+    document.getElementById("resetSuccessPopup").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    {% for message in messages %}
+        {% if message.tags == "success" and "Password reset" in message.message %}
+            document.getElementById("resetSuccessPopup").style.display = "flex";
+        {% endif %}
+    {% endfor %}
+});
+</script>
+<script>
+  // Your custom JS unchanged
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("select").forEach(function (selectElement) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "custom-select-wrapper";
+
+      const display = document.createElement("div");
+      display.className = "custom-select-display";
+      display.innerText =
+        selectElement.options[selectElement.selectedIndex].text;
+
+      const optionBox = document.createElement("div");
+      optionBox.className = "custom-select-options";
+
+      Array.from(selectElement.options).forEach((option) => {
+        const opt = document.createElement("div");
+        opt.className = "custom-select-option";
+        opt.innerText = option.text;
+        opt.dataset.value = option.value;
+
+        if (option.selected) opt.classList.add("selected");
+
+        opt.onclick = () => {
+          selectElement.value = opt.dataset.value;
+          display.innerText = opt.innerText;
+          optionBox.style.display = "none";
+          optionBox
+            .querySelectorAll("div")
+            .forEach((o) => o.classList.remove("selected"));
+          opt.classList.add("selected");
+        };
+
+        optionBox.appendChild(opt);
+      });
+
+      display.onclick = () => {
+        optionBox.style.display =
+          optionBox.style.display === "block" ? "none" : "block";
+      };
+
+      selectElement.style.display = "none";
+
+      selectElement.parentNode.insertBefore(wrapper, selectElement);
+      wrapper.appendChild(selectElement);
+      wrapper.appendChild(display);
+      wrapper.appendChild(optionBox);
+    });
+  });
+</script>
+{% endblock %}

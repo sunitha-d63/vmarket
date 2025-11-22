@@ -1,0 +1,218 @@
+.trendy-breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(-15px);
+  animation: breadcrumbSlide 0.7s ease forwards;
+}
+
+@keyframes breadcrumbSlide {
+  from { opacity: 0; transform: translateY(-15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.heart-icon {
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.heart-red {
+    color: red !important;
+}
+
+.heart-empty {
+    color: #999 !important;
+}
+
+.heart-icon:hover {
+    transform: scale(1.1);
+}
+
+.crumb-link {
+  position: relative;
+  text-decoration: none;
+  color: #0d5e48;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.crumb-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: #0d5e48;
+  border-radius: 2px;
+  transition: 0.3s ease;
+}
+
+.crumb-link:hover::after {
+  width: 100%;
+}
+
+.crumb-link:hover {
+  color: #0a4b39;
+}
+
+.crumb-current {
+  font-weight: 700;
+  color: #084c3a;
+  padding: 3px 10px;
+  background: rgba(0, 128, 96, 0.1);
+  border-radius: 8px;
+
+  animation: glowPulse 1.6s infinite alternate ease-in-out;
+}
+
+@keyframes glowPulse {
+  0% { background: rgba(0, 128, 96, 0.12); }
+  100% { background: rgba(0, 128, 96, 0.22); }
+}
+
+.custom-select-btn {
+  background: #e4f5e9;
+  color: #084c3a;
+  border-radius: 8px;
+  border: 1px solid #8cc8a3;
+  padding: 6px 12px;
+  width: 180px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.custom-select-btn:hover {
+  background: #d3f0e2;
+  color: #084c3a;
+}
+
+.custom-select-menu {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #dceee6;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.custom-select-menu .dropdown-item {
+  padding: 8px 14px;
+  color: #084c3a;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.custom-select-menu .dropdown-item:hover {
+  background: #c8f1df;
+  color: #084c3a;
+}
+
+.custom-select-btn:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.product-card {
+  border-radius: 40px 40px 90px 40px !important;
+  overflow: hidden;         
+  transition: 0.35s ease;
+  transform: translateY(0);
+  position: relative;    
+  color: #6cae50;
+}
+
+.product-card img {
+  height: 250px;
+  object-fit: cover;
+  transition: 0.5s ease;
+  display: block;        
+}
+
+.product-card:hover img {
+  transform: scale(1.07);
+  z-index: 5;           
+}
+
+.wishlist-btn {
+  position: absolute;    
+  top: 12px;
+  right: 12px;
+  z-index: 20 !important; 
+  transition: 0.3s ease;
+}
+
+.wishlist-btn button {
+  position: relative;
+  z-index: 25;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.25) rotate(8deg);
+}
+
+
+.badge {
+  animation: badgePop 0.6s ease;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.card-title {
+  letter-spacing: 0.5px;
+}
+
+.card-text span {
+  font-size: 1.1rem;
+}
+
+.animate-card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: cardSlideUp 0.8s forwards ease-out;
+}
+
+.animate-card:nth-child(1) { animation-delay: .1s; }
+.animate-card:nth-child(2) { animation-delay: .2s; }
+.animate-card:nth-child(3) { animation-delay: .3s; }
+.animate-card:nth-child(4) { animation-delay: .4s; }
+.animate-card:nth-child(5) { animation-delay: .5s; }
+.animate-card:nth-child(6) { animation-delay: .6s; }
+
+@keyframes cardSlideUp {
+  0%   { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.price-box {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 6px;
+}
+.old-price {
+    font-size: 0.90rem;
+    opacity: 0.7;
+}
+
+.new-price {
+    font-size: 1.05rem;
+}
+.unit {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+.offer-time {
+    font-size: 0.80rem;
+    margin-top: 4px;
+}
+
+.offer-badge {
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+}

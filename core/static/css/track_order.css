@@ -1,0 +1,93 @@
+#map {
+    height: 350px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+.input-group .btn {
+    margin-left: 10px !important;
+    border-radius: 10px !important;
+}
+
+.trackcontainer
+{
+  background: linear-gradient(120deg, #e9fbe3, #d6f7cf);
+}
+  .delivery-track { height: 25px; }
+  #truckIcon { position: absolute; top: -12px; left: 0; }
+
+  .action-btn {
+      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+  }
+
+  input,
+textarea,
+select,
+.form-control,
+.form-select {
+    border: 2px solid #a6f781 !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+    color: #222 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.form-control:focus,
+.form-select:focus {
+    border-color: #5c9471 !important;
+}
+h5{
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  color:  #e77b17!important; 
+  animation: bounceIn 1s ease-out, pulse 3s infinite ease-in-out;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.expected-delivery-highlight {
+    background: #fff3cd;
+    padding: 3px 6px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.expected-delivery-highlight:hover {
+    background: #ffe8a1;
+    transform: scale(1.03);
+}

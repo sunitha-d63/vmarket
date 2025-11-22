@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+{% endblock %} {% block title %}Contact Us | VetriMart{% endblock %} 
+{% block content %}
+<div class="contact-container">
+  <div class="contact-box">
+    <h4 class="vm-contact" role="heading" aria-level="4" aria-label="Contact VetriMart Support">
+  <span class="emoji" aria-hidden="true">📞</span>
+  <span class="text fs-3">Contact VetriMart Support</span>
+  <span class="underline" aria-hidden="true"></span>
+</h4>
+    <form
+      id="contactForm"
+      method="POST"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      {% csrf_token %}
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Full Name *</label>
+          {{ form.name }} {% for error in form.name.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Email *</label>
+          {{ form.email }} {% for error in form.email.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Phone *</label>
+          {{ form.phone }} {% for error in form.phone.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Subject *</label>
+          {{ form.subject }} {% for error in form.subject.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Message *</label>
+          {{ form.message }} {% for error in form.message.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Attachment (optional)</label>
+          {{ form.attachment }} {% for error in form.attachment.errors %}
+          <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="col-12 form-check mb-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="captcha"
+            required
+          />
+          <label class="form-check-label" for="captcha">I’m not a robot</label>
+        </div>
+
+        <div class="col-12">
+          <button
+            type="submit"
+            class="btn btn-outline-warning text-secondary w-100 py-2 fw-semibold contact-submit-btn">
+            Send Message
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="successPopup" class="success-popup" style="display:none;">
+  <div class="success-popup-content">
+    <div class="success-icon">✔</div>
+    <h5 class="fw-bold mb-1">Message Sent Successfully!</h5>
+    <p class="small text-muted mb-3">Thank you for contacting VetriMart. Our support team will get back to you shortly.</p>
+    <button class="btn btn-warning text-dark fw-semibold px-4" onclick="closeSuccessPopup()">OK</button>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/contact.js' %}"></script>
+
+<script>
+function closeSuccessPopup() {
+    document.getElementById("successPopup").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    {% for message in messages %}
+        {% if "contact" in message.tags %}
+            document.getElementById("successPopup").style.display = "flex";
+            setTimeout(closeSuccessPopup, 3000);
+        {% endif %}
+    {% endfor %}
+
+});
+</script>
+{% endblock %}
+
+

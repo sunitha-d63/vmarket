@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 product-detail-container">
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="main-image-box">
+        <img src="{{ product.image.url }}" class="img-fluid main-image" alt="{{ product.title }}" />
+      </div>
+
+      <div class="thumb-row mt-3">
+        <img src="{{ product.image.url }}" class="thumb-img active-thumb" />
+        {% if product.image2 %}<img src="{{ product.image2.url }}" class="thumb-img" />{% endif %}
+        {% if product.image3 %}<img src="{{ product.image3.url }}" class="thumb-img" />{% endif %}
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <p class="category-text">{{ product.category.name }}</p>
+      <h1 class="product-title">{{ product.title|upper }}</h1>
+
+      <div class="price-box">
+        <input type="hidden" id="basePrice" value="{{ product.base_price }}" />
+        <input type="hidden" id="discountPrice" value="{{ product.discounted_price }}" />
+        <input type="hidden" id="productUnit" value="{{ product.unit }}" />
+        <input type="hidden" id="isOfferActive" value="{% if product.is_offer_active %}True{% else %}False{% endif %}" />
+
+        <h2 id="livePrice" class="price-display">
+          {% if product.is_offer_active %} ₹{{ product.discounted_price|floatformat:2 }} {% else %} ₹{{ product.base_price|floatformat:2 }} {% endif %}
+        </h2>
+
+        {% if product.is_offer_active %}
+          <p class="text-success fw-semibold mb-1">
+            You save ₹{{ product.savings_amount|floatformat:2 }} ({{ product.discount_percent }}% OFF)
+          </p>
+          <small class="text-muted text-decoration-line-through">MRP: ₹{{ product.base_price|floatformat:2 }} / {{ product.unit }}</small>
+        {% else %}
+          <small class="text-muted">₹{{ product.base_price|floatformat:2 }} / {{ product.unit }}</small>
+        {% endif %}
+      </div>
+
+      <form method="POST" action="{% url 'add_to_cart' product.id %}">
+        {% csrf_token %}
+
+        <div class="row g-3 weight-qty-row">
+          <div class="col-12 col-md-6">
+            <label class="form-label mb-1">Weight:</label>
+
+            <div class="weight-dropdown-wrapper">
+              <div class="selector-box" id="weightSelector">
+                <span id="selectedWeightText">{{ weight_options.0 }}</span>
+                <span class="dropdown-arrow">▼</span>
+              </div>
+
+              <ul class="custom-dropdown-list d-none" id="weightDropdown">
+                {% for w in weight_options %}
+                  <li data-value="{{ w }}">{{ w }}</li>
+                {% endfor %}
+              </ul>
+
+              <select name="weight" id="selectedWeight" hidden>
+                {% for w in weight_options %}
+                  <option value="{{ w }}">{{ w }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label mb-1">Qty:</label>
+            <div class="qty-box d-flex align-items-center justify-content-between">
+              <button type="button" class="qty-btn minus">−</button>
+              <input type="number" id="quantityInput" name="quantity" value="1" min="1" />
+              <button type="button" class="qty-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-4">
+          <div class="col-6">
+            <button type="submit" name="add_to_cart" class="btn btn-outline-dark w-100 action-btn product-buttons">ADD TO CART</button>
+          </div>
+          <div class="col-6">
+            <button type="submit" name="buy_now" class="btn btn-dark w-100 action-btn-dark product-buttons">BUY NOW</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h3 class="text-center mb-4">Related Products</h3>
+  <div class="row g-4">
+    {% for prod in related_products %}
+      <div class="col-md-6">
+        <a href="{{ prod.get_absolute_url }}" class="related-card">
+          <img src="{{ prod.image.url }}" class="related-img" />
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product_detail.js' %}"></script>
+{% endblock %}

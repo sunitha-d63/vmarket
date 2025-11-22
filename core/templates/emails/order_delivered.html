@@ -1,0 +1,17 @@
+{% extends "emails/base_email.html" %}
+
+{% block content %}
+<h2 style="color:#28a745;">Order Delivered Successfully 🎉</h2>
+
+<p>Hello {{ order.user.first_name }},</p>
+
+<p>Your order <strong>#{{ order.id }}</strong> has been successfully delivered.</p>
+
+<p>We hope you enjoy your purchase!</p>
+
+<p style="margin-top:15px;">
+    If you have any issues, feel free to reply to this email.
+</p>
+
+<p>Thank you for choosing VetriMart 🛒</p>
+{% endblock %}

@@ -1,0 +1,131 @@
+
+.login-wrapper {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('/static/images/img1.png') center center/cover no-repeat;  
+}
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 35px 30px;
+    border-radius: 40px 40px 20px 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: slideUp 0.7s ease;
+}
+.login-box input,
+.login-box select {
+    border-radius: 10px !important;
+    border: 1px solid #b1dfc4 !important;
+    padding: 10px 12px !important;
+    background: rgba(255,255,255,0.8) !important;
+    transition: 0.3s ease;
+}
+.login-box input:focus {
+    border-color: #28a745 !important;
+    box-shadow: 0 0 6px rgba(40, 167, 69, 0.4);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.login-box button {
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px;
+    transition: 0.3s ease;
+}
+.login-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 15px rgba(255, 165, 0, 0.45);
+}
+.login-wrapper {
+    justify-content: center;
+}
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+.custom-select-display {
+    background: #ffffff;
+    border: 1px solid #b1dfc4;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+}
+.custom-select-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: #fffbea;
+    border-radius: 8px;
+    margin-top: 4px;
+    z-index: 10;
+}
+
+.custom-select-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    color: #444;
+}
+
+.custom-select-option:hover {
+    background: #ffe6a5;
+}
+
+.custom-select-option.selected {
+    background: #ffd66b;
+    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+    .login-wrapper {
+        justify-content: flex-end; 
+        padding-right: 20px;     
+    }
+
+    .login-box {
+        width: 90%;       
+        margin-right: 0;   
+    }
+}
+.success-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.success-popup-content {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 15px;
+    text-align:center;
+    width: 300px;
+    animation: popIn 0.3s ease-out;
+}
+
+.success-icon {
+    font-size: 40px;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}

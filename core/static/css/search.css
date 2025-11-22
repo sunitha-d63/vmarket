@@ -1,0 +1,119 @@
+/* ============================
+   🔥 FIX: Equal Card Height
+   ============================ */
+.search-card {
+    height: 100%;              /* stretch full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border-radius: 22px;
+    border: 2px solid #5ab892;
+    overflow: hidden;
+    background: #5ab892;
+    transition: 0.3s ease;
+    padding-bottom: 10px;
+}
+
+/* Add flex to column wrapper */
+.row > .col {
+    display: flex;
+}
+.col .search-card {
+    width: 100%;
+}
+
+/* ============================
+   IMAGE — fixed height
+   ============================ */
+.search-img {
+    width: 100%;
+    height: 230px;              /* ↓ slightly smaller so content fits better */
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+    transition: 0.3s ease;
+}
+
+.search-card:hover .search-img {
+    transform: scale(1.06);
+}
+
+/* ============================
+   Wishlist button
+   ============================ */
+.wishlist-btn {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    padding: 8px 10px;
+    font-size: 18px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.25s;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.15);
+}
+
+/* ============================
+   Text styling
+   ============================ */
+.search-card h5 {
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+}
+
+.search-card p {
+    font-size: 0.95rem;
+}
+
+/* Make content block stretch & align nicely */
+.search-card .p-3 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ============================
+   Heading Animation
+   ============================ */
+.search-heading {
+    font-size: 2.3rem;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 0.6px;
+    color: #e42020;
+    opacity: 0;
+    transform: translateY(-12px);
+    animation: fadeSlide 0.7s ease forwards, shimmer 3.5s infinite ease-in-out;
+}
+
+.search-heading .result-text {
+    font-weight: 900;
+    color: #ddee71;
+    font-style: italic;
+    position: relative;
+    display: inline-block;
+    animation: glowPulse 1.8s infinite ease-in-out;
+}
+
+/* ============================
+   Animations
+   ============================ */
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+    0%   { text-shadow: 0 0 0 rgba(0,0,0,0); }
+    50%  { text-shadow: 0 0 18px rgba(255,225,125,0.7); }
+    100% { text-shadow: 0 0 0 rgba(0,0,0,0); }
+}
+
+@keyframes glowPulse {
+    0%   { color: #eded89; transform: translateY(0); }
+    50%  { color: #dbf092; transform: translateY(-2px); }
+    100% { color: #ebf092; transform: translateY(0); }
+}

@@ -1,0 +1,674 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container my-5">
+<h5 class="fw-bold mb-3 fs-4">Delivery Details</h5>
+  <form method="POST" id="paymentForm" novalidate>
+    {% csrf_token %}
+
+    {{ form.latitude }} {{ form.longitude }} {{ form.address_from_map }}
+    <div class="row g-4 mb-5">
+
+      <div class="col-md-6">
+
+        <div class="mb-3">
+  <label class="form-label fw-semibold">Full Name *</label>
+  <input 
+      type="text"
+      name="full_name"
+      id="id_full_name"
+      class="form-control"
+      placeholder="Enter full name"
+      required
+  >
+</div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email *</label>
+          {{ form.email }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Phone *</label>
+          {{ form.phone }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Street Address *</label>
+          {{ form.street_address }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">City *</label>
+          {{ form.city }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Delivery Area / Pincode *</label>
+
+          <div class="custom-weight-dropdown position-relative">
+
+  <input type="text"
+         id="deliveryZoneInput"
+         class="form-control"
+         placeholder="Type or select pincode..."
+         autocomplete="off">
+<div id="pincodeError" class="text-danger small mt-1"></div>
+
+  <ul class="weight-options-list d-none position-absolute w-100 bg-white border rounded"
+      id="deliveryZoneList"
+      style="max-height: 180px; overflow-y: auto; z-index: 1000;">
+      {% for zone in zones %}
+      <li class="p-2 border-bottom"
+          data-value="{{ zone.id }}"
+          data-pincode="{{ zone.pincode }}"
+          data-name="{{ zone.area_name }}"
+          data-lat="{{ zone.latitude }}"
+          data-lon="{{ zone.longitude }}"
+          style="cursor:pointer;">
+          {{ zone.area_name }} ({{ zone.pincode }})
+      </li>
+      {% endfor %}
+  </ul>
+
+  <select id="deliveryZoneSelect" name="delivery_zone" hidden>
+      {% for zone in zones %}
+      <option value="{{ zone.id }}">{{ zone.area_name }}</option>
+      {% endfor %}
+  </select>
+
+</div>
+
+        </div>
+      </div>
+
+      <div class="col-md-6">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <label class="form-label fw-semibold">Select Location on Map</label>
+          <button type="button" id="detectLocationBtn" class="btn btn-outline-warning btn-sm">
+            📍 Use My Location
+          </button>
+        </div>
+
+        <div id="map" class="map-container"></div>
+
+
+        <div id="deliveryFeasibilityMsg" class="mt-2 small fs-4"></div>
+      </div>
+
+    </div>
+    <div class="delivery-slot-box text-center p-3 mb-5">
+
+      <h5 class="fw-semibold mb-2">Select Delivery Slot</h5>
+
+      <div class="custom-weight-dropdown slot-dropdown mx-auto" style="max-width: 280px;">
+        <div class="selected-weight" id="selectedDeliverySlotDisplay">
+          6AM-8AM
+        </div>
+
+        <ul class="weight-options-list d-none" id="deliverySlotList">
+          {% for slot in form.delivery_slot.field.choices %}
+          <li data-value="{{ slot.0 }}">{{ slot.1 }}</li>
+          {% endfor %}
+        </ul>
+
+        <select id="deliverySlotSelect" name="delivery_slot" hidden>
+
+          {% for slot in form.delivery_slot.field.choices %}
+          <option value="{{ slot.0 }}">{{ slot.1 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div id="expectedTimePreview" class="mt-2 fw-bold"></div>
+    </div>
+
+<h5 class="fw-bold mb-3 fs-4">Payment & Summary</h5>
+
+<div class="summary-card p-3 rounded-3 shadow-sm bg-light mb-4">
+  <ul class="list-group border-0 mb-3">
+
+    {% for item in cart_items %}
+    <li class="list-group-item border-0 bg-transparent d-flex justify-content-between">
+      {{ item.product.title }} × {{ item.quantity }}
+      <span>₹{{ item.final_price|floatformat:2 }}</span>
+    </li>
+    {% endfor %}
+
+  </ul>
+
+  <div class="d-flex justify-content-between small">
+    <span>Subtotal:</span>
+    <strong>₹{{ subtotal|floatformat:2 }}</strong>
+  </div>
+
+  <div class="d-flex justify-content-between small">
+    <span>Tax (5%):</span>
+    <strong>₹{{ tax|floatformat:2 }}</strong>
+  </div>
+
+  <hr>
+
+  <div class="d-flex justify-content-between fw-bold">
+    <span>Total:</span>
+    <span class="text-warning">₹{{ total|floatformat:2 }}</span>
+  </div>
+</div>
+
+
+<div id="formErrorBox"></div>
+
+
+    <button type="button" id="rzp-button1" class="btn btn-primary w-100 py-3 fs-5 rounded-3">
+      <i class="bi bi-lock-fill me-2"></i> Pay ₹{{ total }} Securely
+    </button>
+<input type="hidden" name="final_eta_time" id="final_eta_time">
+<input type="hidden" name="final_eta_day" id="final_eta_day">
+
+  </form>
+</div>
+
+<div class="modal fade" id="paymentSuccessModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="text-success display-4">✅</div>
+      <h5 class="fw-bold">Payment Successful!</h5>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="paymentErrorModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="text-danger display-4">❌</div>
+      <h5 class="fw-bold">Payment Failed</h5>
+      <p id="paymentErrorMsg"></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+const CHECK_DELIVERY_URL = "{% url 'check_delivery_feasibility' %}";
+const PAYMENT_PAGE_URL = "{% url 'payment_page' %}";
+const VERIFY_URL = "{% url 'verify_payment' %}";
+
+function getCSRFToken() {
+  const cookie = document.cookie.match("(^|;)\\s*csrftoken\\s*=\\s*([^;]+)");
+  return cookie ? cookie.pop() : "";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("✔ Payment page JS ready");
+
+  const payButton = document.getElementById("rzp-button1");
+  const formEl = document.getElementById("paymentForm");
+  const errorBox = document.getElementById("formErrorBox");
+
+ 
+  const zoneHidden = document.getElementById("deliveryZoneSelect");
+
+  const slotDisplay = document.getElementById("selectedDeliverySlotDisplay");
+  const slotList = document.getElementById("deliverySlotList");
+  const slotHidden = document.getElementById("deliverySlotSelect");
+
+  const latInput = document.getElementById("id_latitude");
+  const lonInput = document.getElementById("id_longitude");
+
+  const msgBox = document.getElementById("deliveryFeasibilityMsg");
+  const etaPreview = document.getElementById("expectedTimePreview");
+
+
+
+slotDisplay.addEventListener("click", (e) => {
+  e.stopPropagation();
+  slotList.classList.toggle("d-none");
+});
+
+
+document.addEventListener("click", (e) => {
+  if (!slotDisplay.contains(e.target)) slotList.classList.add("d-none");
+});
+
+document.querySelectorAll("#deliveryZoneList li").forEach((li) => {
+  li.addEventListener("click", () => {
+
+    zoneHidden.value = li.dataset.value;
+    zoneDisplay.textContent = li.textContent;
+
+    latInput.value = li.dataset.lat;
+    lonInput.value = li.dataset.lon;
+
+    zoneList.classList.add("d-none");
+
+    const zone = zoneHidden.value;
+    const slot = slotHidden.value;
+    const lat  = latInput.value;
+    const lon  = lonInput.value;
+
+    if (zone && slot && lat && lon) {
+      callFeasibility(zone, slot, lat, lon);
+    }
+
+
+    checkFormFilled();
+  });
+});
+
+document.querySelectorAll("#deliverySlotList li").forEach((li) => {
+  li.addEventListener("click", () => {
+
+    slotHidden.value = li.dataset.value;
+    slotDisplay.textContent = li.textContent;
+
+    slotList.classList.add("d-none");
+
+    const zone = zoneHidden.value;
+    const slot = slotHidden.value;
+    const lat  = latInput.value;
+    const lon  = lonInput.value;
+
+    if (zone && slot && lat && lon) {
+      callFeasibility(zone, slot, lat, lon);
+    }
+
+    checkFormFilled();
+  });
+});
+
+  let map = null, marker = null;
+  try {
+    if (typeof L !== "undefined") {
+      map = L.map("map").setView([11.4064, 76.6932], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+    } else {
+      console.warn("Leaflet not loaded");
+    }
+  } catch (e) { console.error("Leaflet init failed", e); map = null; }
+
+  function placeMarker(lat, lon) {
+    if (!map) return;
+    if (marker) marker.remove();
+    marker = L.marker([parseFloat(lat), parseFloat(lon)]).addTo(map);
+    map.setView([parseFloat(lat), parseFloat(lon)], 14);
+    latInput.value = lat;
+    lonInput.value = lon;
+  }
+
+  async function reverseGeocode(lat, lon) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+      const data = await res.json();
+      if (data) {
+        if (document.getElementById("id_street_address")) document.getElementById("id_street_address").value = data.address?.road || data.address?.pedestrian || "";
+        if (document.getElementById("id_city")) document.getElementById("id_city").value = data.address?.city || data.address?.town || data.address?.village || "";
+      }
+    } catch (e) { console.warn("Reverse geocode failed", e); }
+  }
+
+  if (map) {
+    map.on("click", async (e) => {
+      placeMarker(e.latlng.lat, e.latlng.lng);
+      await reverseGeocode(e.latlng.lat, e.latlng.lng);
+      if (zoneHidden.value && slotHidden.value) callFeasibility(zoneHidden.value, slotHidden.value, e.latlng.lat, e.latlng.lng);
+      checkFormFilled();
+    });
+  }
+
+  const detectBtn = document.getElementById("detectLocationBtn");
+  if (detectBtn && navigator.geolocation) {
+    detectBtn.addEventListener("click", () => {
+      detectBtn.textContent = "Detecting…";
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        placeMarker(pos.coords.latitude, pos.coords.longitude);
+        await reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+        detectBtn.textContent = "📍 Use My Location";
+        if (zoneHidden.value && slotHidden.value) callFeasibility(zoneHidden.value, slotHidden.value, pos.coords.latitude, pos.coords.longitude);
+        checkFormFilled();
+      }, () => { detectBtn.textContent = "📍 Use My Location"; });
+    });
+  }
+
+async function callFeasibility(zoneId, slot, lat, lon) {
+  if (!zoneId || !slot) return;
+
+  msgBox.innerHTML = "";
+  etaPreview.innerHTML = "";
+
+  try {
+    const res = await fetch(CHECK_DELIVERY_URL, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCSRFToken(),
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        zone_id: zoneId,
+        slot: slot,
+        latitude: lat || "",
+        longitude: lon || ""
+      })
+    });
+
+    const data = await res.json();
+    console.log("FEASIBILITY:", data);
+
+    const distanceText = data.distance_km ? `${data.distance_km} km` : "N/A";
+    const etaText = data.eta || "Not available";
+
+    if (data.status === "on_time") {
+      msgBox.innerHTML =
+        `<div class="alert alert-success py-2 mb-1">${data.message}</div>`;
+    }
+    else if (data.status === "delayed") {
+      msgBox.innerHTML =
+        `<div class="alert alert-warning py-2 mb-1">${data.message}</div>`;
+    }
+    else {
+      msgBox.innerHTML =
+        `<div class="alert alert-danger py-2 mb-0">Unable to check delivery.</div>`;
+      return;
+    }
+
+    etaPreview.innerHTML = `
+      <div class="fw-bold mt-2 text-success">
+        Delivery scheduled for <b>${data.day_label || "Today"}</b>,
+        arriving around <b>${etaText}</b>
+        <br>
+        <span class="text-muted">(Distance: ${distanceText})</span>
+      </div>
+    `;
+
+document.getElementById("final_eta_time").value = data.eta;
+document.getElementById("final_eta_day").value = data.day_label;
+
+
+  } catch (err) {
+    console.error("Error:", err);
+    msgBox.innerHTML = `
+      <div class="alert alert-danger py-2 mb-0">⚠ Unable to check delivery.</div>`;
+  }
+}
+
+  const requiredFields = [
+    "id_full_name", "id_email", "id_phone", "id_street_address", "id_city",
+    "deliveryZoneSelect", "deliverySlotSelect"
+  ];
+
+  function checkFormFilled(showError = false) {
+    let allFilled = true;
+    let missing = [], invalid = [];
+
+    requiredFields.forEach((id) => {
+      const el = document.getElementById(id);
+      const val = el ? el.value.trim() : "";
+      if (!val) { allFilled = false; missing.push(id); }
+      if (id === "id_phone" && val && !/^[0-9]{10}$/.test(val)) { allFilled = false; invalid.push("Phone must be 10 digits."); }
+    });
+
+  
+
+    if (showError && !allFilled) {
+      let msg = "";
+      if (missing.length) msg += "Please fill all required fields.<br>";
+      if (invalid.length) msg += invalid.join("<br>");
+      errorBox.innerHTML = `<div class="alert alert-danger py-2 mb-2">${msg}</div>`;
+
+      errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (allFilled) {
+      errorBox.innerHTML = "";
+    }
+
+    return allFilled;
+  }
+
+  requiredFields.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) { el.addEventListener("input", () => checkFormFilled()); el.addEventListener("change", () => checkFormFilled()); }
+  });
+  checkFormFilled();
+
+  payButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (!checkFormFilled(true)) return;
+
+    const fd = new FormData(formEl);
+    fetch(PAYMENT_PAGE_URL, {
+      method: "POST",
+      headers: {
+  "X-CSRFToken": getCSRFToken(),
+  "X-Requested-With": "XMLHttpRequest"
+},
+
+      body: fd,
+    })
+
+      .then(r => r.json())
+      .then(data => {
+        if (!data || data.status !== "created") {
+
+    let html = "";
+
+    if (data && data.message && typeof data.message === "object") {
+
+        for (let field in data.message) {
+            html += `<div class="alert alert-danger py-2">${data.message[field][0]}</div>`;
+        }
+    } else {
+        html = `<div class="alert alert-danger py-2">${data.message || "Form validation failed."}</div>`;
+    }
+
+    errorBox.innerHTML = html;
+    errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    return;
+}
+
+        if (typeof Razorpay === "undefined") {
+          errorBox.innerHTML = `<div class="alert alert-danger">Razorpay script not loaded.</div>`;
+          return;
+        }
+        const options = {
+          key: data.key,
+          amount: data.amount,
+          currency: "INR",
+          name: "VetriMart",
+          order_id: data.razorpay_order_id,
+          handler: function (response) {
+            fetch(VERIFY_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-CSRFToken": getCSRFToken() },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                order_id: data.order_id,
+              }),
+            })
+              .then(r => r.json())
+              .then(result => {
+                if (result.status === "success") {
+                  new bootstrap.Modal(document.getElementById("paymentSuccessModal")).show();
+                  setTimeout(() => window.location.href = `/order-confirmation/${result.order_id}/`, 1400);
+                } else {
+                  document.getElementById("paymentErrorMsg").textContent = result.message || "Verification failed.";
+                  new bootstrap.Modal(document.getElementById("paymentErrorModal")).show();
+                }
+              })
+              .catch(() => {
+                document.getElementById("paymentErrorMsg").textContent = "Server error during verification.";
+                new bootstrap.Modal(document.getElementById("paymentErrorModal")).show();
+              });
+          },
+          prefill: {
+            name: document.getElementById("id_full_name")?.value || "",
+            email: document.getElementById("id_email")?.value || "",
+            contact: document.getElementById("id_phone")?.value || "",
+          },
+          theme: { color: "#4a5f76" },
+        };
+        new Razorpay(options).open();
+      })
+      .catch((err) => {
+        console.error("Payment create error", err);
+        errorBox.innerHTML = `<div class="alert alert-danger">Server error. Try again.</div>`;
+      });
+  });
+
+});
+
+
+function placeMarker(lat, lon) {
+    if (!map) return;
+
+    if (marker) marker.remove();
+
+    marker = L.marker([lat, lon], {
+        icon: L.icon({
+            iconUrl: "/static/images/marker.png", 
+            iconSize: [28, 38],
+            className: "custom-animated-marker"   
+        })
+    }).addTo(map);
+
+    map.flyTo([lat, lon], 15, { duration: 0.8 });
+}
+
+function calculateETA(slotText) {
+  if (!slotText) return "";
+
+  let [start, end] = slotText.split(" - ");
+
+  function to24(t) {
+    let h = parseInt(t);
+    let pm = t.toLowerCase().includes("pm");
+    if (h === 12) return pm ? 12 : 0;
+    return pm ? h + 12 : h;
+  }
+
+  const startHour = to24(start);
+  const endHour = to24(end);
+
+  const now = new Date();
+  const slotStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0);
+  const slotEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, 0);
+
+  let eta;
+  let dayLabel = "Today";
+
+  if (now < slotStart) {
+    eta = slotStart;
+  }
+  else if (now >= slotStart && now <= slotEnd) {
+    eta = new Date(now.getTime() + 30 * 60000);
+  }
+  else {
+    eta = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, startHour, 0);
+    dayLabel = "Tomorrow";
+  }
+
+  return {
+    eta: eta.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    day: dayLabel
+  };
+}
+
+const zoneInput  = document.getElementById("deliveryZoneInput");
+const zoneList2  = document.getElementById("deliveryZoneList");
+const zoneHidden2 = document.getElementById("deliveryZoneSelect");
+
+let zoneItems = Array.from(zoneList2.querySelectorAll("li"));
+
+zoneInput.addEventListener("focus", () => {
+    zoneList2.classList.remove("d-none");
+});
+
+zoneInput.addEventListener("input", () => {
+    let val = zoneInput.value.toLowerCase();
+
+    zoneItems.forEach(li => {
+        let text = (li.dataset.name + " " + li.dataset.pincode).toLowerCase();
+        li.style.display = text.includes(val) ? "block" : "none";
+    });
+
+    zoneList2.classList.remove("d-none");
+});
+
+zoneItems.forEach(li => {
+    li.addEventListener("click", () => {
+
+        zoneInput.value = `${li.dataset.name} (${li.dataset.pincode})`;
+
+        zoneHidden2.value = li.dataset.value;
+
+        latInput.value = li.dataset.lat;
+        lonInput.value = li.dataset.lon;
+
+        zoneList2.classList.add("d-none");
+
+        checkFormFilled();
+    });
+});
+
+document.addEventListener("click", (e) => {
+    if (!zoneInput.contains(e.target))
+        zoneList2.classList.add("d-none");
+});
+
+const pincodeInput = document.getElementById("deliveryZoneInput");
+
+const pincodeError = document.getElementById("pincodeError");
+
+const validPincodes = [
+  {% for zone in zones %}
+    "{{ zone.pincode }}",
+  {% endfor %}
+];
+
+pincodeInput.addEventListener("input", function () {
+    let value = pincodeInput.value.trim();
+
+    value = value.replace(/\D/g, "");
+
+    if (value.length > 6) {
+        value = value.slice(0, 6);
+    }
+
+    pincodeInput.value = value;
+
+    if (value.length === 0) {
+    pincodeError.textContent = "";
+    pincodeInput.classList.remove("is-invalid");
+    return;
+}
+
+if (value.length !== 6) {
+    pincodeError.textContent = "Pincode must be exactly 6 digits.";
+    pincodeInput.classList.add("is-invalid");
+    return;
+}
+    if (!validPincodes.includes(value)) {
+        pincodeError.textContent = "We do not deliver to this Pincode.";
+        pincodeInput.classList.add("is-invalid");
+        return;
+    }
+
+    pincodeError.textContent = "";
+    pincodeInput.classList.remove("is-invalid");
+});
+
+
+</script>
+{% endblock %}

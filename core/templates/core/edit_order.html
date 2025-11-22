@@ -1,0 +1,128 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{% static 'css/order_edit.css' %}">
+{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="card shadow-lg p-4 rounded-4">
+        <h5 class="fw-bold mb-4 fs-4">Edit Delivery Details</h5>
+
+        <div id="orderData"
+             data-lat="{{ order.latitude|default:'0' }}"
+             data-lon="{{ order.longitude|default:'0' }}">
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Delivery Area / Pincode</label>
+
+                        <div class="custom-weight-dropdown">
+
+                            <div class="selected-weight" id="editSelectedDeliveryZone">
+                                {% if selected_zone %}
+                                    {{ selected_zone }}
+                                {% else %}
+                                    Select Delivery Area / Pincode
+                                {% endif %}
+                            </div>
+
+                            <ul class="weight-options-list d-none" id="editDeliveryZoneList">
+                                {% for zone in zones %}
+                                <li data-value="{{ zone.id }}"
+                                    data-lat="{{ zone.latitude }}"
+                                    data-lon="{{ zone.longitude }}">
+                                    {{ zone.area_name }} ({{ zone.pincode }})
+                                </li>
+                                {% endfor %}
+                            </ul>
+
+                            <select id="editDeliveryZoneSelect" name="delivery_zone" hidden>
+                                {% for zone in zones %}
+                                <option value="{{ zone.id }}"
+                                    {% if order.delivery_zone and zone.id == order.delivery_zone.id %}
+                                        selected
+                                    {% endif %}>
+                                    {{ zone.area_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Street Address</label>
+                        {{ form.street_address }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">City</label>
+                        {{ form.city }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Delivery Slot</label>
+
+                        <div class="custom-weight-dropdown">
+
+                            <div class="selected-weight" id="editSelectedSlot">
+                                {% if selected_slot %}
+                                    {{ selected_slot }}
+                                {% else %}
+                                    Select Delivery Slot
+                                {% endif %}
+                            </div>
+
+                            <ul class="weight-options-list d-none" id="editDeliverySlotList">
+                                {% for value, label in form.delivery_slot.field.choices %}
+                                <li data-value="{{ value }}">{{ label }}</li>
+                                {% endfor %}
+                            </ul>
+
+                            <select id="editDeliverySlotSelect" name="delivery_slot" hidden>
+                                {% for value, label in form.delivery_slot.field.choices %}
+                                <option value="{{ value }}"
+                                    {% if selected_slot == value %}
+                                        selected
+                                    {% endif %}>
+                                    {{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+
+                    {{ form.latitude }}
+                    {{ form.longitude }}
+                    {{ form.address_from_map }}
+
+                    <div id="editEtaMessage" class="mt-2 fw-bold text-center"></div>
+
+                    <button type="button" id="detectLocationBtn"
+                            class="btn btn-outline-warning w-100 mb-3">
+                        📍 Use My Location
+                    </button>
+
+                    <!-- SUBMIT -->
+                    <button class="btn btn-primary w-100 py-2 fs-5">
+                        Save Changes
+                    </button>
+             </form>
+            </div>
+            <div class="col-lg-6">
+                <div class="map-wrapper">
+                    <div id="map" ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="{% static 'js/edit_order.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+{% endblock %}
+{% block content %}
+
+<div class="login-wrapper">
+  <div class="login-box">
+<div class="login-wrapper">
+  <div class="login-box">
+
+    <h2 class="mb-4 text-center">Verify OTP</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn bg-warning w-100 mt-3">Verify</button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

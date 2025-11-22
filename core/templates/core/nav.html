@@ -1,0 +1,151 @@
+{% load static %}
+
+<nav class="glass-navbar shadow-sm">
+  <div class="nav-inner">
+
+    <a href="{% url 'home' %}" class="nav-brand">VetriMart</a>
+
+    <button class="nav-toggle" id="navToggleBtn">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'our_products' %}">Our Products</a></li>
+      <li><a href="{% url 'features_page' %}">Features</a></li>
+      <li><a href="{% url 'contact_page' %}">Contact</a></li>
+
+      {% if user.is_authenticated %}
+          {% if user.role == "admin" %}
+              <li><a href="{% url 'admin_dashboard' %}" class="role-link">Admin</a></li>
+          {% endif %}
+
+          {% if user.role == "vendor" %}
+              <li><a href="{% url 'vendor_dashboard' %}" class="role-link">Vendor</a></li>
+          {% endif %}
+      {% endif %}
+    </ul>
+
+    <div class="nav-icons">
+
+      {% if not user.is_authenticated or user.role == "customer" %}
+
+        <a href="{% url 'wishlist_page' %}" class="nav-icon">
+            <i class="bi bi-heart"></i>
+        </a>
+
+        <a href="{% url 'cart' %}" class="nav-icon">
+            <i class="bi bi-bag"></i>
+        </a>
+
+        <button id="openSearch" class="nav-icon">
+            <i class="bi bi-search"></i>
+        </button>
+
+        {% if user.is_authenticated %}
+        <div class="icon-wrap">
+            <a id="trackMenuBtn" class="nav-icon">
+                <i class="bi bi-truck"></i>
+            </a>
+
+            <div id="trackMenuBox" class="track-menu">
+                <a href="{% url 'track_order' %}">Track Order</a>
+                <a href="{% url 'my_orders' %}">Order Details</a>
+            </div>
+        </div>
+        {% endif %}
+
+      {% endif %}
+
+      <div class="icon-wrap">
+          <button id="userMenuBtn" class="nav-icon">
+              <i class="bi bi-person"></i>
+          </button>
+
+          <div id="userMenuBox" class="user-menu">
+              {% if user.is_authenticated %}
+                  <a href="{% url 'logout' %}">Logout</a>
+              {% else %}
+                  <a href="{% url 'login' %}">Login</a>
+                  <a href="{% url 'register' %}">Register</a>
+              {% endif %}
+          </div>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+
+<div id="searchBox" class="search-bar">
+    <div class="search-input-wrap">
+        <input type="text" placeholder=" " name="q" form="searchForm">
+        <span id="closeSearch" class="close-icon">x</span>
+    </div>
+</div>
+<form id="searchForm" action="{% url 'search_products' %}" method="get"></form>
+
+<script>
+const userBtn = document.getElementById("userMenuBtn");
+const userBox = document.getElementById("userMenuBox");
+
+if (userBtn) {
+    userBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const trackBox = document.getElementById("trackMenuBox");
+        if (trackBox) trackBox.style.display = "none";
+        userBox.style.display = userBox.style.display === "block" ? "none" : "block";
+    });
+}
+
+const trackBtn = document.getElementById("trackMenuBtn");
+const trackBox = document.getElementById("trackMenuBox");
+
+if (trackBtn) {
+    trackBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (userBox) userBox.style.display = "none";
+        trackBox.style.display = trackBox.style.display === "block" ? "none" : "block";
+    });
+}
+
+document.addEventListener("click", function(event) {
+
+    if (userBox && !event.target.closest("#userMenuBtn") &&
+        !event.target.closest("#userMenuBox")) {
+        userBox.style.display = "none";
+    }
+
+    if (trackBox && !event.target.closest("#trackMenuBtn") &&
+        !event.target.closest("#trackMenuBox")) {
+        trackBox.style.display = "none";
+    }
+
+});
+
+// Search open button (only for customers)
+const openSearchBtn = document.getElementById("openSearch");
+if (openSearchBtn) {
+    openSearchBtn.onclick = () => {
+        let box = document.getElementById("searchBox");
+        box.style.display = "flex";
+        box.querySelector("input").focus();
+    };
+}
+
+const closeSearch = document.getElementById("closeSearch");
+if (closeSearch) {
+    closeSearch.onclick = () => {
+        document.getElementById("searchBox").style.display = "none";
+    };
+}
+
+document.getElementById("navToggleBtn").onclick = () => {
+    document.getElementById("navLinks").classList.toggle("open");
+};
+
+
+</script>
+
+

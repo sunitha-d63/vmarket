@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quality_info.css' %}">
+<link rel="stylesheet" href="{% static 'css/fresh-organic.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="quality-hero text-center py-5">
+    <h1 class="fw-bold subtitle fs-2">Quality Guaranteed</h1>
+    <p class="mt-2">We ensure every product meets the highest standards.</p>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <img src="{% static 'images/fea4.avif' %}" class="feature-img-circle" alt="">
+        </div>
+
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+                <h3 class="fw-bold mb-3 subtitle fs-4">Our Quality Promise</h3>
+
+                <ul class="quality-list">
+                    <li>✔ Every product goes through strict quality checks</li>
+                    <li>📦 Hygienically packed to maintain freshness</li>
+                    <li>🌿 Only trusted suppliers & verified farm sources</li>
+                    <li>🔍 We replace any damaged item instantly</li>
+                    <li>⭐ 100% satisfaction guarantee on all orders</li>
+                </ul>
+
+                <a href="/" class="btn btn-dark mt-3">Shop Now</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+

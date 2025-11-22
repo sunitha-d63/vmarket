@@ -1,0 +1,17 @@
+
+.quality-hero h1 {
+    font-size: 42px;
+    color: #303f9f;
+}
+
+.quality-list {
+    list-style: none;
+    padding-left: 0;
+    line-height: 1.8;
+    font-size: 22px;
+    color: #444;
+}
+
+.quality-list li {
+    margin-bottom: 6px;
+}

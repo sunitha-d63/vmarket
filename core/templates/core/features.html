@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/features.css' %}">
+{% endblock %}
+{% block content %}
+<section class="features-section container my-5">
+
+ <div class="container text-center ">
+    <h2 class="section-title mb-4 subtitle fs-1">Our Features</h2>
+</div>
+  <div class="row g-4">
+    <div class="col-md-4 d-flex">
+      <div class="feature-card blue-bg">
+        <img src="{% static 'images/fea1.avif' %}" class="feature-img" alt="">
+        <h4>Fresh & Organic</h4>
+        <p>Get the freshest vegetables, fruits, and essentials delivered to your home.</p>
+        <a href="/fresh-organic/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 d-flex">
+      <div class="feature-card yellow-bg ">
+        <img src="{% static 'images/fea2.webp' %}" class="feature-img" alt="">
+        <h4>Fast Delivery</h4>
+        <p>Lightning-fast doorstep delivery within 30–60 minutes.</p>
+        <a href="/delivery-info/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+   <div class="col-md-4 d-flex">
+      <div class="feature-card blue-bg">
+        <img src="{% static 'images/fea3.jpg' %}" class="feature-img" alt="">
+        <h4>Easy Payments</h4>
+        <p>Pay using UPI, cards, wallets, or cash on delivery — 100% secure.</p>
+        <a href="/payment-info/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 d-flex">
+      <div class="feature-card yellow-bg ">
+        <img src="{% static 'images/fea5.jpg' %}" class="feature-img" alt="">
+        <h4>Best Deals</h4>
+        <p>Save more with daily deals, combo packs, and festival offers.</p>
+        <a href="/offers/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 d-flex">
+      <div class="feature-card blue-bg">
+        <img src="{% static 'images/fea4.avif' %}" class="feature-img" alt="">
+        <h4>Quality Guaranteed</h4>
+        <p>Every product is checked and packed with care for top quality.</p>
+        <a href="/quality-info/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 d-flex">
+      <div class="feature-card yellow-bg ">
+        <img src="{% static 'images/fea6.webp' %}" class="feature-img" alt="">
+        <h4>24/7 Support</h4>
+        <p>We are here to assist you anytime — phone, chat, or email.</p>
+        <a href="/support/" class="btn btn-outline-dark">Read More</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

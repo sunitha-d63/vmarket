@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fresh-organic.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="fresh-hero text-center py-5">
+    <h1 class="fw-bold subtitle fs-2">Fresh & Organic</h1>
+    <p class="mt-2">Naturally grown produce, harvested and delivered the same day.</p>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <img src="{% static 'images/fea1.avif' %}" class="feature-img-circle" alt="">
+        </div>
+
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+                <h3 class="fw-bold mb-3 subtitle fs-4">Why Choose Fresh & Organic?</h3>
+
+                <ul class="organic-list">
+                    <li>🌿 100% fresh vegetables & fruits straight from farms</li>
+                    <li>🚫 No chemicals, pesticides, or artificial preservatives</li>
+                    <li>🚚 Delivered the same day to keep nutrients intact</li>
+                    <li>✔ Carefully quality-checked before packing</li>
+                    <li>♻ Eco-friendly & food-safe packaging</li>
+                </ul>
+
+                <a href="/" class="btn btn-dark mt-3">Shop Now</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% load wishlist_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/offer.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb trendy-breadcrumb">
+    <li class="breadcrumb-item text-black">
+      <a href="{% url 'home' %}" class="crumb-link">Home</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <span class="crumb-current ">Top Offers</span>
+    </li>
+  </ol>
+</nav>
+
+  <h2 class="fw-bold mb-2 top-offer-title">Top Offers</h2>
+
+  <p class="text-muted mb-4">Best deals across all categories</p>
+
+  <div class="mb-4 d-flex gap-2 flex-wrap">
+    <a href="?category=" class="btn btn-outline-warning btn-sm {% if not selected_category %}active{% endif %}">
+      All
+    </a>
+
+    {% for cat in categories %}
+    <a href="?category={{ cat.name }}" 
+       class="btn btn-outline-success btn-sm textcat {% if selected_category == cat.name %}active{% endif %}">
+      {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <form method="get" class="d-flex justify-content-end mb-4">
+  <div class="custom-select-wrapper" style="width:200px;">
+    <select name="sort" class="real-select" onchange="this.form.submit()">
+      <option value="">Sort By</option>
+      <option value="price_low"  {% if sort == 'price_low' %}selected{% endif %}>Lowest Discount</option>
+      <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Highest Discount</option>
+      <option value="name_asc"   {% if sort == 'name_asc' %}selected{% endif %}>Name A → Z</option>
+      <option value="name_desc"  {% if sort == 'name_desc' %}selected{% endif %}>Name Z → A</option>
+    </select>
+
+    <div class="custom-select-display" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>
+    <div class="custom-select-options" role="listbox" tabindex="-1"></div>
+  </div>
+</form>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+
+    {% for product in products %}
+
+<div class="col">
+  <div class="offer-card">
+      <form action="{% url 'toggle_wishlist' product.id %}" method="post" class="wishlist-btn-box">
+        {% csrf_token %}
+        <button type="submit" class="wishlist-btn">
+
+            {% if user.is_authenticated %}
+                {% if product|in_user_wishlist:user %}
+                    ❤️
+                {% else %}
+                    🤍
+                {% endif %}
+            {% else %}
+                {% if product.id in guest_wishlist_ids %}
+                    ❤️
+                {% else %}
+                    🤍
+                {% endif %}
+            {% endif %}
+
+        </button>
+    </form>
+      {% if product.is_offer_active %}
+      <span class="offer-badge">{{ product.discount_percent }}% OFF</span>
+      {% endif %}
+
+      <div class="offer-img-wrap">
+          <a href="{{ product.get_absolute_url }}">
+              <img src="{{ product.image.url }}" class="offer-img" alt="{{ product.title }}">
+          </a>
+      </div>
+
+      <h5 class="offer-title">{{ product.title }}</h5>
+
+<div class="price-box">
+    <span class="old-price">₹{{ product.base_price }} / {{ product.unit }}</span>
+    <span class="new-price">₹{{ product.discounted_price }} / {{ product.unit }}</span>
+</div>
+
+{% if product.savings_amount > 0 %}
+<p class="savings">You save ₹{{ product.savings_amount }}</p>
+{% endif %}
+
+
+      <p class="timer">
+      {% if product.is_offer_active %}
+          {{ product.offer_remaining_time }}
+      {% else %}
+          Offer Expired
+      {% endif %}
+      </p>
+  </div>
+</div>
+    {% empty %}
+    <div class="alert alert-warning text-center">No offers found.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/offer.js' %}"></script>
+<script>document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".custom-select-wrapper").forEach(function (wrapper) {
+    const select = wrapper.querySelector("select.real-select");
+    const display = wrapper.querySelector(".custom-select-display");
+    const optionBox = wrapper.querySelector(".custom-select-options");
+
+    function build() {
+      const selIndex = select.selectedIndex >= 0 ? select.selectedIndex : 0;
+      display.textContent = select.options[selIndex].text;
+
+      optionBox.innerHTML = "";
+      Array.from(select.options).forEach((opt, idx) => {
+        const div = document.createElement("div");
+        div.className = "custom-select-option";
+        div.textContent = opt.text;
+        div.dataset.value = opt.value;
+        if (opt.selected) div.classList.add("selected");
+        div.addEventListener("click", function (e) {
+
+          select.value = this.dataset.value;
+          select.querySelectorAll("option").forEach(o => o.selected = false);
+          select.options[idx].selected = true;
+
+          build();
+
+          optionBox.style.display = "none";
+          display.setAttribute("aria-expanded", "false");
+
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+        optionBox.appendChild(div);
+      });
+    }
+
+    build();
+
+    display.addEventListener("click", function (e) {
+      const isOpen = optionBox.style.display === "block";
+      optionBox.style.display = isOpen ? "none" : "block";
+      display.setAttribute("aria-expanded", !isOpen);
+    });
+
+    display.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        display.click();
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!wrapper.contains(e.target)) {
+        optionBox.style.display = "none";
+        display.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    select.addEventListener("change", build);
+  });
+});</script>
+{% endblock %}

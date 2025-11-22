@@ -1,0 +1,237 @@
+:root {
+  --muted: #6b7280;
+  --card-radius: 16px;
+  --soft-shadow: 0 8px 24px rgba(16,24,40,0.06);
+}
+
+html, body {
+  overflow-x: hidden !important;
+}
+
+.adm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+  .adm-container {
+    padding: 10px 12px;
+  }
+}
+
+.adm-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+}
+
+.adm-header .muted {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin: 18px 0 28px;
+}
+
+@media (max-width: 992px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-soft {
+  border-radius: var(--card-radius);
+  padding: 18px;
+  box-shadow: var(--soft-shadow);
+  transition: transform .25s ease, box-shadow .25s ease;
+  background: #fff;
+}
+
+.card-soft:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(16,24,40,0.08);
+}
+
+.box-users { background: linear-gradient(180deg,#6fd0a4,#e8f8f1); }
+.box-products { background: linear-gradient(180deg,#619bce,#eaf6ff); }
+.box-orders { background: linear-gradient(180deg,#ffe78a,#fff6e6); }
+.box-sales { background: linear-gradient(180deg,#e35969,#fff0f2); }
+
+.card-soft small {
+  display: block;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .grid-three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-three {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.panel-head h5 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.panel-super {
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.panel-super:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.panel-top-products { background: linear-gradient(135deg, #e6ffe6, #f2fff2); }
+.panel-low-stock { background: linear-gradient(135deg, #fff8e1, #fff4cc); }
+.panel-delivery-status { background: linear-gradient(135deg, #e8f3ff, #d9ecff); }
+.panel-recent-orders { background: linear-gradient(135deg, #f5eaff, #f8f0ff); }
+
+.list-compact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-compact li {
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.04);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-compact {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-compact th,
+.table-compact td {
+  text-align: left;
+  padding: 10px 8px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(16,24,40,0.04);
+}
+
+.badge {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+@media (max-width: 600px) {
+  .card-soft {
+    padding: 14px;
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.delay-1 { animation-delay: .12s; }
+.delay-2 { animation-delay: .22s; }
+.delay-3 { animation-delay: .34s; }
+.delay-4 { animation-delay: .46s; }
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.table-row-animate {
+  animation: rowIn .45s ease both;
+}
+
+@keyframes rowIn {
+  from { opacity:0; transform: translateX(-8px); }
+  to { opacity:1; transform:none; }
+}
+
+.htitle {
+  color: #5ab892 !important;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 700;
+  font-style: italic;
+  color: #e42020 !important;
+  animation: bounceIn 1s ease-out, pulse 3s infinite ease-in-out;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
